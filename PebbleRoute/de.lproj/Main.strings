@@ -1,0 +1,9 @@
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "8eu-C5-gfa"; */
+"8eu-C5-gfa.text" = "Title";
+
+/* Class = "IBUILabel"; text = "Subtitle"; ObjectID = "mAV-xN-yGX"; */
+"mAV-xN-yGX.text" = "Subtitle";
+
+/* Class = "IBUINavigationItem"; title = "Map"; ObjectID = "rHP-VB-bcF"; */
+"rHP-VB-bcF.title" = "Map";
