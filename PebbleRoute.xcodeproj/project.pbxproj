@@ -23,6 +23,7 @@
 		D83D033C188579C300EDC2BE /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D033B188579C300EDC2BE /* MapViewController.m */; };
 		D83D033F18857A1500EDC2BE /* FindDestinationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D033E18857A1500EDC2BE /* FindDestinationTableViewController.m */; };
 		D83D034118857B9600EDC2BE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83D034018857B9600EDC2BE /* MapKit.framework */; };
+		D83D03481885802800EDC2BE /* DirectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D03471885802800EDC2BE /* DirectionsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,8 @@
 		D83D034218857BA600EDC2BE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		D83D034318857BA600EDC2BE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D83D034418857BA600EDC2BE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D83D03461885802800EDC2BE /* DirectionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionsViewController.h; sourceTree = "<group>"; };
+		D83D03471885802800EDC2BE /* DirectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,13 +126,10 @@
 		D83D03091885782000EDC2BE /* PebbleRoute */ = {
 			isa = PBXGroup;
 			children = (
-				D83D033D18857A1500EDC2BE /* FindDestinationTableViewController.h */,
-				D83D033E18857A1500EDC2BE /* FindDestinationTableViewController.m */,
-				D83D033A188579C300EDC2BE /* MapViewController.h */,
-				D83D033B188579C300EDC2BE /* MapViewController.m */,
+				D83D03151885782000EDC2BE /* Main.storyboard */,
+				D83D034518857C3800EDC2BE /* Controller */,
 				D83D03121885782000EDC2BE /* PebbleRouteAppDelegate.h */,
 				D83D03131885782000EDC2BE /* PebbleRouteAppDelegate.m */,
-				D83D03151885782000EDC2BE /* Main.storyboard */,
 				D83D031B1885782000EDC2BE /* Images.xcassets */,
 				D83D030A1885782000EDC2BE /* Supporting Files */,
 			);
@@ -163,6 +163,19 @@
 				D83D032B1885782000EDC2BE /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D83D034518857C3800EDC2BE /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D83D03461885802800EDC2BE /* DirectionsViewController.h */,
+				D83D03471885802800EDC2BE /* DirectionsViewController.m */,
+				D83D033D18857A1500EDC2BE /* FindDestinationTableViewController.h */,
+				D83D033E18857A1500EDC2BE /* FindDestinationTableViewController.m */,
+				D83D033A188579C300EDC2BE /* MapViewController.h */,
+				D83D033B188579C300EDC2BE /* MapViewController.m */,
+			);
+			name = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D83D033C188579C300EDC2BE /* MapViewController.m in Sources */,
+				D83D03481885802800EDC2BE /* DirectionsViewController.m in Sources */,
 				D83D033F18857A1500EDC2BE /* FindDestinationTableViewController.m in Sources */,
 				D83D03141885782000EDC2BE /* PebbleRouteAppDelegate.m in Sources */,
 				D83D03101885782000EDC2BE /* main.m in Sources */,

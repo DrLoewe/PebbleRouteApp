@@ -8,9 +8,11 @@
 
 #import "MapViewController.h"
 #import "FindDestinationTableViewController.h"
+#import "DirectionsViewController.h"
 
 @interface MapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *map;
+@property (nonatomic, weak) DirectionsViewController *directionsVC;
 @end
 
 @implementation MapViewController
@@ -37,14 +39,13 @@
 
 	MKDirections *route = [[MKDirections alloc] initWithRequest:request];
 	[route calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
-		for (MKRoute *route in response.routes) {
-			NSLog(@"route: %@", route);
-			for (MKRouteStep *routeStep in route.steps) {
-				NSLog(@"%.1fm: %@", routeStep.distance, routeStep.instructions);
-			}
-		}
-	}];
-	
+        [self showRoute:[response.routes firstObject]];
+    }];
+}
+
+- (void)showRoute:(MKRoute *)route
+{
+    self.directionsVC.route = route;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -76,7 +77,10 @@
 		FindDestinationTableViewController *dvc = segue.destinationViewController;
 		dvc.history = self.destinationHistory;
 		dvc.region = self.region;
-	}
+	} else if ([segue.identifier isEqualToString:@"Show Directions"]) {
+        DirectionsViewController *dvc = segue.destinationViewController;
+        self.directionsVC = dvc;
+    }
 }
 
 - (void)viewDidLoad
