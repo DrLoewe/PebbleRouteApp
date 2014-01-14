@@ -9,11 +9,16 @@
 #import "DirectionsViewController.h"
 
 @interface DirectionsViewController ()
-
+@property (nonatomic, strong) MKDistanceFormatter *distanceFormatter;
 @end
 
 @implementation DirectionsViewController
 
+- (MKDistanceFormatter *)distanceFormatter
+{
+	if (!_distanceFormatter) _distanceFormatter = [[MKDistanceFormatter alloc] init];
+	return _distanceFormatter;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -25,23 +30,16 @@
     static NSString *CellIdentifier = @"Route Direction Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     MKRouteStep *step = self.route.steps[indexPath.row];
-    cell.textLabel.text = step.distance ? [NSString stringWithFormat:@"in %.1fkm %@",
-                                           step.distance/1000,
-                                           step.instructions] :
-    step.instructions;
+    cell.textLabel.text = step.distance ? [NSString stringWithFormat:@"%@, %@",
+                                           [[self.distanceFormatter stringFromDistance: step.distance] stringByReplacingOccurrencesOfString:@" " withString:@""],
+                                           step.instructions] : step.instructions;
     return cell;
 }
 
 - (void)updateUI
 {
-    NSLog(@"updateUI called");
     [self.view setHidden:self.route == nil];
     [self.tableView reloadData];
-
-    NSLog(@"route: %@", self.route);
-    for (MKRouteStep *routeStep in self.route.steps) {
-        NSLog(@"%.1fm: %@", routeStep.distance, routeStep.instructions);
-    }
 }
 
 - (void)setRoute:(MKRoute *)route
@@ -64,6 +62,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     [self updateUI];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	MKRouteStep *step = self.route.steps[indexPath.row];
+	CLLocationCoordinate2D coords = step.polyline.coordinate;
+	[self.delegate didSelectLocation:coords];
 }
 
 @end

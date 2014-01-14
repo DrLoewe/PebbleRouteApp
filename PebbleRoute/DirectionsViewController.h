@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "DirectionsViewControllerDelegate.h"
 
 @interface DirectionsViewController : UITableViewController
 @property (strong, nonatomic) MKRoute *route;
+@property (nonatomic, weak) id <DirectionsViewControllerDelegate> delegate;
 @end

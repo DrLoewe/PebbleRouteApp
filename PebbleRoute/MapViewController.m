@@ -9,13 +9,22 @@
 #import "MapViewController.h"
 #import "FindDestinationTableViewController.h"
 #import "DirectionsViewController.h"
+#import "DirectionsViewControllerDelegate.h"
 
-@interface MapViewController () <MKMapViewDelegate>
+@interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (nonatomic, weak) DirectionsViewController *directionsVC;
+@property (weak, nonatomic) IBOutlet UILabel *RouteDistanceLabel;
+@property (nonatomic, strong) MKDistanceFormatter *distanceFormatter;
 @end
 
 @implementation MapViewController
+
+- (MKDistanceFormatter *)distanceFormatter
+{
+	if (!_distanceFormatter) _distanceFormatter = [[MKDistanceFormatter alloc] init];
+	return _distanceFormatter;
+}
 
 - (NSArray *)destinationHistory
 {
@@ -43,9 +52,26 @@
     }];
 }
 
-- (void)showRoute:(MKRoute *)route
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
 {
+    MKPolylineRenderer *renderer =
+	[[MKPolylineRenderer alloc] initWithOverlay:overlay];
+    renderer.strokeColor = [UIColor blueColor];
+    renderer.lineWidth = 5.0;
+    return renderer;
+}
+
+-(void)showRoute:(MKRoute *)route
+{
+	if (self.directionsVC.route) {
+		MKRoute *oldRoute = self.directionsVC.route;
+		// clean up references to the old route
+		[self.map removeOverlay:oldRoute.polyline];
+	}
     self.directionsVC.route = route;
+	self.RouteDistanceLabel.text = [NSString stringWithFormat:@"Total distance: %@",[self.distanceFormatter stringFromDistance:route.distance]];
+	self.RouteDistanceLabel.hidden = NO;
+	[self.map addOverlay:route.polyline level:MKOverlayLevelAboveRoads];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -64,11 +90,16 @@
 
 	MKCoordinateRegion region;
 	region.center = userLocation.coordinate;
-	region.span.latitudeDelta = 1;
-	region.span.longitudeDelta = 1;
+	region.span.latitudeDelta = .1;
+	region.span.longitudeDelta = .1;
+
+	if (!CLLocationCoordinate2DIsValid(self.region.center) ||
+		(self.region.center.longitude == 0.0 &&
+		self.region.center.latitude == 0.0)) {
+		[self.map setRegion:region animated:YES];
+	}
 	
 	self.region = region;
-	[self.map setRegion:self.region animated:YES];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -79,6 +110,7 @@
 		dvc.region = self.region;
 	} else if ([segue.identifier isEqualToString:@"Show Directions"]) {
         DirectionsViewController *dvc = segue.destinationViewController;
+		dvc.delegate = self;
         self.directionsVC = dvc;
     }
 }
@@ -101,6 +133,26 @@
 - (IBAction)selectDestination:(UIStoryboardSegue *)segue {
 	self.destination = [[segue sourceViewController] selectedDestination];
 	NSLog(@"selected destination: %@",self.destination);
+}
+
+#pragma mark - DirectionsViewControllerDelegate
+
+- (void)didSelectLocation:(CLLocationCoordinate2D)location
+{
+	MKCoordinateRegion region;
+	region.center = location;
+	region.span.latitudeDelta = .02;
+	region.span.longitudeDelta = .02;
+	[self.map setRegion:region animated:YES];
+	
+	static MKPointAnnotation *annotation = nil;
+	[self.map removeAnnotation:annotation];
+
+	annotation = [[MKPointAnnotation alloc] init];
+	[annotation setCoordinate:location];
+	[self.map addAnnotation:annotation];
+	
+	NSLog(@"map region set");
 }
 
 @end

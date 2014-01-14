@@ -37,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D813C2241885D17500034D49 /* DirectionsViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DirectionsViewControllerDelegate.h; sourceTree = "<group>"; };
 		D83D03001885782000EDC2BE /* PebbleRoute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PebbleRoute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83D03031885782000EDC2BE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D83D03051885782000EDC2BE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -127,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				D83D03151885782000EDC2BE /* Main.storyboard */,
+				D813C2241885D17500034D49 /* DirectionsViewControllerDelegate.h */,
 				D83D034518857C3800EDC2BE /* Controller */,
 				D83D03121885782000EDC2BE /* PebbleRouteAppDelegate.h */,
 				D83D03131885782000EDC2BE /* PebbleRouteAppDelegate.m */,
@@ -494,6 +496,7 @@
 				D83D03341885782000EDC2BE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D83D03351885782000EDC2BE /* Build configuration list for PBXNativeTarget "PebbleRouteTests" */ = {
 			isa = XCConfigurationList;
@@ -502,6 +505,7 @@
 				D83D03371885782000EDC2BE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
