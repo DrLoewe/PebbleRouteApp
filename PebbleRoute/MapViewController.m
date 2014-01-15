@@ -16,9 +16,14 @@
 @property (nonatomic, weak) DirectionsViewController *directionsVC;
 @property (weak, nonatomic) IBOutlet UILabel *RouteDistanceLabel;
 @property (nonatomic, strong) MKDistanceFormatter *distanceFormatter;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 @end
 
 @implementation MapViewController
+
+- (IBAction)recalculateRoute:(id)sender {
+    [self calculateRoute];
+}
 
 - (MKDistanceFormatter *)distanceFormatter
 {
@@ -32,24 +37,31 @@
 	return _destinationHistory;
 }
 
-- (void)setDestination:(MKPlacemark *)destination
+- (void)calculateRoute
 {
-	_destination = destination;
-	MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-	[annotation setCoordinate:destination.coordinate];
-	[self.map addAnnotation:annotation];
-	// calculate route for destination
+    self.refreshButton.enabled = NO;
+    // calculate route for destination
 	MKDirectionsRequest *request = [[MKDirectionsRequest alloc] init];
 	
 	MKMapItem *source = [[MKMapItem alloc] initWithPlacemark:[[MKPlacemark alloc] initWithCoordinate:self.region.center addressDictionary:nil]];
 	request.source = source;
 	request.destination = [[MKMapItem alloc] initWithPlacemark:self.destination];
 	request.transportType = MKDirectionsTransportTypeWalking;
-
 	MKDirections *route = [[MKDirections alloc] initWithRequest:request];
 	[route calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
         [self showRoute:[response.routes firstObject]];
+        self.refreshButton.enabled = YES;
     }];
+}
+
+- (void)setDestination:(MKPlacemark *)destination
+{
+	_destination = destination;
+	MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+	[annotation setCoordinate:destination.coordinate];
+	[self.map addAnnotation:annotation];
+    self.title = destination.name;
+    [self calculateRoute];
 }
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
