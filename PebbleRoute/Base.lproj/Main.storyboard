@@ -202,40 +202,6 @@
             </objects>
             <point key="canvasLocation" x="100" y="-382"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="Jif-f1-rj5">
-            <objects>
-                <viewController id="uG1-rH-5H2" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="9ZZ-hX-B82"/>
-                        <viewControllerLayoutGuide type="bottom" id="g0Z-0v-XWN"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="SSz-rb-TTW">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="HCx-In-PqY" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="Kh1-Cj-xoY">
-            <objects>
-                <viewController id="mZy-Yj-Sdc" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="LcE-6g-K3Z"/>
-                        <viewControllerLayoutGuide type="bottom" id="LNO-y0-uFV"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Cw9-m9-xGa">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LbZ-y6-24o" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-        </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

@@ -59,9 +59,6 @@
 - (void)setSearchResponse:(MKLocalSearchResponse *)searchResponse
 {
 	_searchResponse = searchResponse;
-	if (searchResponse) {
-		NSLog(@"map items count=%d",searchResponse.mapItems.count);
-	}
 	[self.searchDisplayController.searchResultsTableView reloadData];
 }
 

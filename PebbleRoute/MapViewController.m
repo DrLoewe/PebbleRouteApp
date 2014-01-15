@@ -86,16 +86,6 @@
 	[self.map addOverlay:route.polyline level:MKOverlayLevelAboveRoads];
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-		NSLog(@"initWithNibName");
-    }
-    return self;
-}
-
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
 	NSLog(@"didUpdateUserLocation to lat=%f&lon=%f",userLocation.coordinate.latitude, userLocation.coordinate.longitude);
@@ -130,7 +120,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	NSLog(@"viewDidLoad()");
 	// Do any additional setup after loading the view.
 	self.map.showsUserLocation = YES;
 	self.map.delegate = self;
@@ -144,7 +133,6 @@
 
 - (IBAction)selectDestination:(UIStoryboardSegue *)segue {
 	self.destination = [[segue sourceViewController] selectedDestination];
-	NSLog(@"selected destination: %@",self.destination);
 }
 
 #pragma mark - DirectionsViewControllerDelegate
@@ -163,8 +151,6 @@
 	annotation = [[MKPointAnnotation alloc] init];
 	[annotation setCoordinate:location];
 	[self.map addAnnotation:annotation];
-	
-	NSLog(@"map region set");
 }
 
 @end
