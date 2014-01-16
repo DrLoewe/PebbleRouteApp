@@ -60,7 +60,8 @@
     // calculate route for destination
 	MKDirectionsRequest *request = [[MKDirectionsRequest alloc] init];
 	
-	MKMapItem *source = [[MKMapItem alloc] initWithPlacemark:[[MKPlacemark alloc] initWithCoordinate:self.region.center addressDictionary:nil]];
+	MKMapItem *source = [[MKMapItem alloc] initWithPlacemark:
+						 [[MKPlacemark alloc] initWithCoordinate:self.region.center addressDictionary:nil]];
 	request.source = source;
 	request.destination = [[MKMapItem alloc] initWithPlacemark:self.destination];
 	request.transportType = MKDirectionsTransportTypeWalking;
@@ -96,7 +97,8 @@
 		[self.map removeOverlay:oldRoute.polyline];
 	}
     self.directionsVC.route = route;
-	self.RouteDistanceLabel.text = [NSString stringWithFormat:@"Total distance: %@",[self.distanceFormatter stringFromDistance:route.distance]];
+	self.RouteDistanceLabel.text = [NSString stringWithFormat:@"Total distance: %@",
+									[self.distanceFormatter stringFromDistance:route.distance]];
 	self.RouteDistanceLabel.hidden = NO;
 	[self.map addOverlay:route.polyline level:MKOverlayLevelAboveRoads];
 }
