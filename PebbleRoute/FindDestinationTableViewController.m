@@ -7,10 +7,12 @@
 //
 
 #import "FindDestinationTableViewController.h"
+#import "DestinationDetailViewController.h"
 
 @interface FindDestinationTableViewController () <UISearchBarDelegate, UITableViewDelegate>
 @property (strong, nonatomic) MKLocalSearch *localSearch;
 @property (strong, nonatomic) MKLocalSearchResponse *searchResponse;
+@property (nonatomic) BOOL firstCall;
 @end
 
 @implementation FindDestinationTableViewController
@@ -33,6 +35,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	self.firstCall = YES;
 	
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -44,16 +47,11 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if (!self.history.count) {
+    if (!self.history.count && self.firstCall) {
         // no items in our history, auto select the search field
         [self.searchDisplayController.searchBar becomeFirstResponder];
+		self.firstCall = NO;
     }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)setSearchResponse:(MKLocalSearchResponse *)searchResponse
@@ -134,7 +132,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-	// we do implement only one segue, so we dont do any checking for now
+
 	UITableViewCell *cell = sender;
 	NSIndexPath *indexPath = [[segue.sourceViewController tableView] indexPathForCell:cell];
 	MKMapItem *mapItem = nil;
@@ -146,13 +144,17 @@
 		if (indexPath)
 			mapItem = self.searchResponse.mapItems[indexPath.row];
 	}
-	
-	if (mapItem) {
-		self.selectedDestination = mapItem.placemark;
-		if ([self.history indexOfObject:mapItem] == NSNotFound)
-			[self.history addObject:mapItem];
+
+	if ([segue.destinationViewController isKindOfClass:[DestinationDetailViewController class]]) {
+		DestinationDetailViewController *dvc = segue.destinationViewController;
+		dvc.mapItem = mapItem;
+	} else {
+		if (mapItem) {
+			self.selectedDestination = mapItem.placemark;
+			if ([self.history indexOfObject:mapItem] == NSNotFound)
+				[self.history addObject:mapItem];
+		}
 	}
-	
 }
 
 @end

@@ -25,6 +25,7 @@
 		D83D034118857B9600EDC2BE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83D034018857B9600EDC2BE /* MapKit.framework */; };
 		D83D03481885802800EDC2BE /* DirectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D03471885802800EDC2BE /* DirectionsViewController.m */; };
 		D8FDD9D31887E577005410BD /* PebbleRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FDD9D21887E577005410BD /* PebbleRoute.m */; };
+		D8FDD9D718888394005410BD /* DestinationDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FDD9D618888394005410BD /* DestinationDetailViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,8 @@
 		D83D03471885802800EDC2BE /* DirectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionsViewController.m; sourceTree = "<group>"; };
 		D8FDD9D11887E577005410BD /* PebbleRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PebbleRoute.h; sourceTree = SOURCE_ROOT; };
 		D8FDD9D21887E577005410BD /* PebbleRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PebbleRoute.m; sourceTree = SOURCE_ROOT; };
+		D8FDD9D518888394005410BD /* DestinationDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DestinationDetailViewController.h; sourceTree = "<group>"; };
+		D8FDD9D618888394005410BD /* DestinationDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DestinationDetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +177,8 @@
 		D83D034518857C3800EDC2BE /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				D8FDD9D518888394005410BD /* DestinationDetailViewController.h */,
+				D8FDD9D618888394005410BD /* DestinationDetailViewController.m */,
 				D83D033A188579C300EDC2BE /* MapViewController.h */,
 				D83D033B188579C300EDC2BE /* MapViewController.m */,
 				D83D03461885802800EDC2BE /* DirectionsViewController.h */,
@@ -295,6 +300,7 @@
 				D83D033C188579C300EDC2BE /* MapViewController.m in Sources */,
 				D8FDD9D31887E577005410BD /* PebbleRoute.m in Sources */,
 				D83D03481885802800EDC2BE /* DirectionsViewController.m in Sources */,
+				D8FDD9D718888394005410BD /* DestinationDetailViewController.m in Sources */,
 				D83D033F18857A1500EDC2BE /* FindDestinationTableViewController.m in Sources */,
 				D83D03141885782000EDC2BE /* PebbleRouteAppDelegate.m in Sources */,
 				D83D03101885782000EDC2BE /* main.m in Sources */,
