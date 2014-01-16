@@ -22,9 +22,13 @@
 
 @implementation MapViewController
 
+#pragma mark - Outlets
+
 - (IBAction)recalculateRoute:(id)sender {
     [self calculateRoute];
 }
+
+#pragma mark - lazy instantiation of properties
 
 - (MKDistanceFormatter *)distanceFormatter
 {
@@ -38,6 +42,18 @@
 	return _destinationHistory;
 }
 
+- (void)setDestination:(MKPlacemark *)destination
+{
+	_destination = destination;
+	MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+	[annotation setCoordinate:destination.coordinate];
+	[self.map addAnnotation:annotation];
+    self.title = destination.name;
+    [self calculateRoute];
+}
+
+#pragma mark - route functions
+
 - (void)calculateRoute
 {
     self.refreshButton.enabled = NO;
@@ -50,19 +66,17 @@
 	request.transportType = MKDirectionsTransportTypeWalking;
 	MKDirections *route = [[MKDirections alloc] initWithRequest:request];
 	[route calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
-        [self showRoute:[response.routes firstObject]];
-        self.refreshButton.enabled = YES;
+		if (error) {
+			[[[UIAlertView alloc] initWithTitle:@"Route failure"
+									   message:error.localizedDescription
+									  delegate:nil
+							 cancelButtonTitle:nil
+							 otherButtonTitles:@"OK", nil] show];
+		} else {
+			[self showRoute:[response.routes firstObject]];
+		}
+		self.refreshButton.enabled = YES;
     }];
-}
-
-- (void)setDestination:(MKPlacemark *)destination
-{
-	_destination = destination;
-	MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-	[annotation setCoordinate:destination.coordinate];
-	[self.map addAnnotation:annotation];
-    self.title = destination.name;
-    [self calculateRoute];
 }
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
