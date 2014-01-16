@@ -19,6 +19,7 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="8VZ-T4-lcm">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <gestureRecognizers/>
                             </mapView>
                             <containerView opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VKC-tW-XnX">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="126"/>
@@ -41,13 +42,14 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qvz-Lv-FVT">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.80000000000000004" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qvz-Lv-FVT">
                                 <rect key="frame" x="0.0" y="372" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items/>
                             </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="VKC-tW-XnX" firstAttribute="top" secondItem="8VZ-T4-lcm" secondAttribute="top" id="B7U-Hk-Hdw"/>
                             <constraint firstItem="8VZ-T4-lcm" firstAttribute="top" secondItem="0He-sH-x6j" secondAttribute="top" id="Hau-9j-0Ql"/>
@@ -59,6 +61,9 @@
                             <constraint firstItem="VKC-tW-XnX" firstAttribute="trailing" secondItem="8VZ-T4-lcm" secondAttribute="trailing" id="qhj-5z-A9P"/>
                             <constraint firstItem="8VZ-T4-lcm" firstAttribute="leading" secondItem="0He-sH-x6j" secondAttribute="leading" id="wOh-7a-ZPf"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="7Tk-NM-mcy" appends="YES" id="KUQ-Xr-zNs"/>
+                        </connections>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="Map" id="rHP-VB-bcF">
@@ -81,6 +86,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JyV-yD-On0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="7Tk-NM-mcy">
+                    <connections>
+                        <action selector="tap:" destination="3yQ-ua-Cal" id="T0Q-oX-b1n"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="100" y="-111"/>
         </scene>

@@ -10,25 +10,44 @@
 #import "FindDestinationTableViewController.h"
 #import "DirectionsViewController.h"
 #import "DirectionsViewControllerDelegate.h"
+#import "PebbleRoute.h"
 
-@interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate>
+@interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (nonatomic, weak) DirectionsViewController *directionsVC;
 @property (weak, nonatomic) IBOutlet UILabel *RouteDistanceLabel;
 @property (nonatomic, strong) MKDistanceFormatter *distanceFormatter;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (nonatomic, strong) PebbleRoute *pebbleRoute; // our model
+@property (nonatomic, weak) MKRouteStep *currentStep; // on our route
 @end
 
 @implementation MapViewController
 
+- (IBAction)tap:(id)sender {
+	self.toolbar.hidden = NO;
+	[sender setCancelsTouchesInView:NO];
+}
+
 #pragma mark - Outlets
+
+- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
+{
+	self.toolbar.hidden = YES;
+}
 
 - (IBAction)recalculateRoute:(id)sender {
     [self calculateRoute];
 }
 
 #pragma mark - lazy instantiation of properties
+
+- (PebbleRoute *)pebbleRoute
+{
+	if (!_pebbleRoute) _pebbleRoute = [[PebbleRoute alloc] init];
+	return _pebbleRoute;
+}
 
 - (MKDistanceFormatter *)distanceFormatter
 {
@@ -74,7 +93,9 @@
 							 cancelButtonTitle:nil
 							 otherButtonTitles:@"OK", nil] show];
 		} else {
-			[self showRoute:[response.routes firstObject]];
+			MKRoute *route = [response.routes firstObject];
+			self.pebbleRoute.route = route;
+			[self showRoute:route];
 		}
 		self.refreshButton.enabled = YES;
     }];
@@ -82,9 +103,15 @@
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
 {
-    MKPolylineRenderer *renderer =
-	[[MKPolylineRenderer alloc] initWithOverlay:overlay];
-    renderer.strokeColor = [UIColor blueColor];
+    MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithOverlay:overlay];
+
+	// draw to full route in light gray, the current remaining route path in blue
+	if (overlay == self.pebbleRoute.route.polyline) {
+		renderer.strokeColor = [UIColor blueColor];
+	} else {
+		renderer.strokeColor = [UIColor redColor];
+	}
+
     renderer.lineWidth = 5.0;
     return renderer;
 }
@@ -101,11 +128,30 @@
 									[self.distanceFormatter stringFromDistance:route.distance]];
 	self.RouteDistanceLabel.hidden = NO;
 	[self.map addOverlay:route.polyline level:MKOverlayLevelAboveRoads];
+	self.currentStep = nil;
+	[self updateLocationOnMap];
+}
+
+- (void)updateLocationOnMap
+{
+	static MKPolyline *currentRoutePath = nil;
+
+	if (!self.pebbleRoute.route) return;
+	
+	if (self.currentStep != self.pebbleRoute.currentStep) {
+		NSLog(@"currentStep changed");
+		self.currentStep = self.pebbleRoute.currentStep;
+		if (currentRoutePath)
+			[self.map removeOverlay:currentRoutePath];
+		currentRoutePath = [self.pebbleRoute currentRoutePath];
+		NSLog(@"current route path: %@", currentRoutePath);
+		[self.map addOverlay:currentRoutePath];
+	}
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
-	NSLog(@"didUpdateUserLocation to lat=%f&lon=%f",userLocation.coordinate.latitude, userLocation.coordinate.longitude);
+	//	NSLog(@"didUpdateUserLocation to lat=%f&lon=%f",userLocation.coordinate.latitude, userLocation.coordinate.longitude);
 
 	MKCoordinateRegion region;
 	region.center = userLocation.coordinate;
@@ -119,6 +165,8 @@
 	}
 	
 	self.region = region;
+	self.pebbleRoute.location = userLocation.location;
+	[self updateLocationOnMap];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
