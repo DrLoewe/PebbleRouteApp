@@ -31,24 +31,29 @@
                                 </connections>
                             </containerView>
                             <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No active route!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yuw-AL-2Eg">
-                                <rect key="frame" x="109" y="375" width="102" height="21"/>
+                                <rect key="frame" x="109" y="383" width="102" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="Tan-sy-WRI"/>
+                                    <constraint firstAttribute="height" constant="21" id="7KI-Je-iwG"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qvz-Lv-FVT">
+                                <rect key="frame" x="0.0" y="372" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items/>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="yuw-AL-2Eg" secondAttribute="bottom" constant="20" symbolic="YES" id="92y-YG-7YG"/>
-                            <constraint firstItem="yuw-AL-2Eg" firstAttribute="centerX" secondItem="VKC-tW-XnX" secondAttribute="centerX" id="ALD-kv-z92"/>
                             <constraint firstItem="VKC-tW-XnX" firstAttribute="top" secondItem="8VZ-T4-lcm" secondAttribute="top" id="B7U-Hk-Hdw"/>
                             <constraint firstItem="8VZ-T4-lcm" firstAttribute="top" secondItem="0He-sH-x6j" secondAttribute="top" id="Hau-9j-0Ql"/>
+                            <constraint firstItem="yuw-AL-2Eg" firstAttribute="centerX" secondItem="VKC-tW-XnX" secondAttribute="centerX" id="Rgx-Kj-Y3G"/>
                             <constraint firstAttribute="bottom" secondItem="8VZ-T4-lcm" secondAttribute="bottom" id="WMT-EF-SKk"/>
+                            <constraint firstItem="2Eu-l8-WgO" firstAttribute="top" secondItem="yuw-AL-2Eg" secondAttribute="bottom" constant="12" id="WMU-2k-lzo"/>
                             <constraint firstItem="VKC-tW-XnX" firstAttribute="leading" secondItem="8VZ-T4-lcm" secondAttribute="leading" id="WmL-R0-kZ5"/>
                             <constraint firstAttribute="trailing" secondItem="8VZ-T4-lcm" secondAttribute="trailing" id="Z9E-lO-T61"/>
                             <constraint firstItem="VKC-tW-XnX" firstAttribute="trailing" secondItem="8VZ-T4-lcm" secondAttribute="trailing" id="qhj-5z-A9P"/>
@@ -72,6 +77,7 @@
                         <outlet property="RouteDistanceLabel" destination="yuw-AL-2Eg" id="Zud-pO-ZhU"/>
                         <outlet property="map" destination="8VZ-T4-lcm" id="Hsf-Nz-kTY"/>
                         <outlet property="refreshButton" destination="Qgb-H6-g1Y" id="geG-8A-Zg6"/>
+                        <outlet property="toolbar" destination="qvz-Lv-FVT" id="Msd-qC-M7B"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JyV-yD-On0" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *RouteDistanceLabel;
 @property (nonatomic, strong) MKDistanceFormatter *distanceFormatter;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @end
 
 @implementation MapViewController
@@ -117,12 +118,18 @@
     }
 }
 
+#pragma mark - MVC Livecycle
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
 	self.map.showsUserLocation = YES;
 	self.map.delegate = self;
+	MKUserTrackingBarButtonItem *trackingButton = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.map];
+	[self.toolbar setItems:@[
+							 trackingButton] animated:YES
+	 ];
 }
 
 - (void)didReceiveMemoryWarning
