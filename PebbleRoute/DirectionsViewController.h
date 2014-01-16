@@ -12,5 +12,6 @@
 
 @interface DirectionsViewController : UITableViewController
 @property (strong, nonatomic) MKRoute *route;
+@property (nonatomic, weak) MKRouteStep *currentStep;
 @property (nonatomic, weak) id <DirectionsViewControllerDelegate> delegate;
 @end

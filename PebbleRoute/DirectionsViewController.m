@@ -14,6 +14,12 @@
 
 @implementation DirectionsViewController
 
+- (void)setCurrentStep:(MKRouteStep *)currentStep
+{
+	_currentStep = currentStep;
+	[self.tableView reloadData];
+}
+
 - (MKDistanceFormatter *)distanceFormatter
 {
 	if (!_distanceFormatter) _distanceFormatter = [[MKDistanceFormatter alloc] init];
@@ -30,9 +36,18 @@
     static NSString *CellIdentifier = @"Route Direction Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     MKRouteStep *step = self.route.steps[indexPath.row];
-    cell.textLabel.text = step.distance ? [NSString stringWithFormat:@"%@, %@",
-                                           [[self.distanceFormatter stringFromDistance: step.distance] stringByReplacingOccurrencesOfString:@" " withString:@""],
-                                           step.instructions] : step.instructions;
+
+	NSDictionary *attributes = nil;
+	if (step == self.currentStep)
+		attributes = @{NSForegroundColorAttributeName: [UIColor blueColor] };
+	
+	NSString *instructionsString = step.distance ? [NSString stringWithFormat:@"%@, %@",
+													[[self.distanceFormatter stringFromDistance: step.distance] stringByReplacingOccurrencesOfString:@" " withString:@""],
+													step.instructions] : step.instructions;
+
+    cell.textLabel.attributedText = attributes ?
+	[[NSAttributedString alloc] initWithString:instructionsString attributes:attributes] :
+	[[NSAttributedString alloc] initWithString:instructionsString];
     return cell;
 }
 

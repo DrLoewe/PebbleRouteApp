@@ -25,6 +25,8 @@
 
 @implementation MapViewController
 
+#pragma mark - Gesture Recognizer Actions
+
 - (IBAction)tap:(id)sender {
 	self.toolbar.hidden = NO;
 	[sender setCancelsTouchesInView:NO];
@@ -37,6 +39,7 @@
 	self.toolbar.hidden = YES;
 }
 
+// recalculate route button (refresh icon in the top toolbar)
 - (IBAction)recalculateRoute:(id)sender {
     [self calculateRoute];
 }
@@ -107,9 +110,9 @@
 
 	// draw to full route in light gray, the current remaining route path in blue
 	if (overlay == self.pebbleRoute.route.polyline) {
-		renderer.strokeColor = [UIColor blueColor];
+		renderer.strokeColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:.4];
 	} else {
-		renderer.strokeColor = [UIColor redColor];
+		renderer.strokeColor = [UIColor blueColor];
 	}
 
     renderer.lineWidth = 5.0;
@@ -124,7 +127,7 @@
 		[self.map removeOverlay:oldRoute.polyline];
 	}
     self.directionsVC.route = route;
-	self.RouteDistanceLabel.text = [NSString stringWithFormat:@"Total distance: %@",
+	self.RouteDistanceLabel.text = [NSString stringWithFormat:@"∑ %@",
 									[self.distanceFormatter stringFromDistance:route.distance]];
 	self.RouteDistanceLabel.hidden = NO;
 	[self.map addOverlay:route.polyline level:MKOverlayLevelAboveRoads];
@@ -139,16 +142,20 @@
 	if (!self.pebbleRoute.route) return;
 	
 	if (self.currentStep != self.pebbleRoute.currentStep) {
-		NSLog(@"currentStep changed");
 		self.currentStep = self.pebbleRoute.currentStep;
 		if (currentRoutePath)
 			[self.map removeOverlay:currentRoutePath];
 		currentRoutePath = [self.pebbleRoute currentRoutePath];
-		NSLog(@"current route path: %@", currentRoutePath);
 		[self.map addOverlay:currentRoutePath];
+		self.directionsVC.currentStep = self.pebbleRoute.currentStep;
 	}
+	self.title = [NSString stringWithFormat:@"%@ ⇢ %@",
+				  [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance],
+				  self.destination.name
+				  ];
 }
 
+// user moved and his position got updated
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
 	//	NSLog(@"didUpdateUserLocation to lat=%f&lon=%f",userLocation.coordinate.latitude, userLocation.coordinate.longitude);
@@ -208,6 +215,7 @@
 
 #pragma mark - DirectionsViewControllerDelegate
 
+// user clicked on a table row in the directions table mvc
 - (void)didSelectLocation:(CLLocationCoordinate2D)location
 {
 	MKCoordinateRegion region;

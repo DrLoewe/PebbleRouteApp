@@ -10,6 +10,7 @@
 
 @interface PebbleRoute()
 @property (nonatomic, weak, readwrite) MKRouteStep *currentStep;
+@property (nonatomic, readwrite) NSUInteger distance;
 @end
 
 @implementation PebbleRoute
@@ -29,10 +30,8 @@
 - (void)setRoute:(MKRoute *)route
 {
 	_route = route;
-	NSLog(@"PebbleRoute: new route setup: %@", self.route);
-	MKPolyline *polyline = self.route.polyline;
-	NSLog(@"polyline has %d points", polyline.pointCount);
 	self.currentStep = [self.route.steps firstObject];
+	[self calculateDistance];
 }
 
 // get the distance (in m) from a specified location to self.location
@@ -42,19 +41,9 @@
 	return [self.location distanceFromLocation:toLocation];
 }
 
-- (void)setLocation:(CLLocation *)location
+// calculate the total distance to the final destination using the current location of the user
+- (void)calculateDistance
 {
-	_location = location;
-	
-	NSUInteger currentDistance = [self distanceFrom:self.currentStep.polyline.coordinate];
-	
-	for (MKRouteStep *step in self.route.steps) {
-		int distance = [self distanceFrom:step.polyline.coordinate];
-		if (distance < currentDistance) {
-			self.currentStep = step;
-		}
-	}
-	
 	NSUInteger indexOfCurrentStep = [self.route.steps indexOfObject:self.currentStep];
 	if (indexOfCurrentStep != NSNotFound) {
 		if (self.route.steps.count > (indexOfCurrentStep+1)) {
@@ -69,10 +58,25 @@
 				MKRouteStep *step = self.route.steps[i];
 				totalDistance += step.distance;
 			}
-			
+			if (totalDistance) self.distance = totalDistance;
 			//			NSLog(@"total distance: %.1dm",totalDistance);
 		}
 	}
+}
+
+- (void)setLocation:(CLLocation *)location
+{
+	_location = location;
+	
+	NSUInteger currentDistance = [self distanceFrom:self.currentStep.polyline.coordinate];
+	
+	for (MKRouteStep *step in self.route.steps) {
+		int distance = [self distanceFrom:step.polyline.coordinate];
+		if (distance < currentDistance) {
+			self.currentStep = step;
+		}
+	}
+	[self calculateDistance];
 }
 
 @end
