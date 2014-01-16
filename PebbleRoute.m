@@ -51,7 +51,7 @@
 			int totalDistance = 0; // total distance to destination
 			
 			MKRouteStep *nextStep = self.route.steps[indexOfCurrentStep+1];
-			int distanceToNextStep = [self distanceFrom:nextStep.polyline.coordinate];
+			NSUInteger distanceToNextStep = [self distanceFrom:nextStep.polyline.coordinate];
 			totalDistance += distanceToNextStep;
 			
 			for (int i=indexOfCurrentStep+2; i<self.route.steps.count; i++) {

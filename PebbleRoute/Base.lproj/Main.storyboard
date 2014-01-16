@@ -42,7 +42,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.80000000000000004" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qvz-Lv-FVT">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qvz-Lv-FVT">
                                 <rect key="frame" x="0.0" y="372" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items/>
@@ -58,6 +58,9 @@
                             <constraint firstItem="2Eu-l8-WgO" firstAttribute="top" secondItem="yuw-AL-2Eg" secondAttribute="bottom" constant="12" id="WMU-2k-lzo"/>
                             <constraint firstItem="VKC-tW-XnX" firstAttribute="leading" secondItem="8VZ-T4-lcm" secondAttribute="leading" id="WmL-R0-kZ5"/>
                             <constraint firstAttribute="trailing" secondItem="8VZ-T4-lcm" secondAttribute="trailing" id="Z9E-lO-T61"/>
+                            <constraint firstItem="qvz-Lv-FVT" firstAttribute="leading" secondItem="VKC-tW-XnX" secondAttribute="leading" id="aJ4-0x-viY"/>
+                            <constraint firstItem="qvz-Lv-FVT" firstAttribute="bottom" secondItem="8VZ-T4-lcm" secondAttribute="bottom" id="atT-jh-tnp"/>
+                            <constraint firstItem="qvz-Lv-FVT" firstAttribute="trailing" secondItem="8VZ-T4-lcm" secondAttribute="trailing" id="eyI-mf-EwK"/>
                             <constraint firstItem="VKC-tW-XnX" firstAttribute="trailing" secondItem="8VZ-T4-lcm" secondAttribute="trailing" id="qhj-5z-A9P"/>
                             <constraint firstItem="8VZ-T4-lcm" firstAttribute="leading" secondItem="0He-sH-x6j" secondAttribute="leading" id="wOh-7a-ZPf"/>
                         </constraints>
