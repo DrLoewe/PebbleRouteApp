@@ -17,6 +17,12 @@
 - (void)setCurrentStep:(MKRouteStep *)currentStep
 {
 	_currentStep = currentStep;
+    NSUInteger index = [self.route.steps indexOfObject:self.currentStep];
+    if (index != NSNotFound) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
+                              atScrollPosition:UITableViewScrollPositionMiddle
+                                      animated:YES];
+    }
 	[self.tableView reloadData];
 }
 
