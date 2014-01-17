@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (nonatomic, strong) PebbleRoute *pebbleRoute; // our model
 @property (nonatomic, weak) MKRouteStep *currentStep; // on our route
+@property (nonatomic, strong) MKPointAnnotation *destinationAnnotation;
 @end
 
 @implementation MapViewController
@@ -46,6 +47,13 @@
 
 #pragma mark - lazy instantiation of properties
 
+- (MKPointAnnotation *)destinationAnnotation
+{
+	if (!_destinationAnnotation) _destinationAnnotation = [[MKPointAnnotation alloc] init];
+	[self.map addAnnotation:_destinationAnnotation];
+	return _destinationAnnotation;
+}
+
 - (PebbleRoute *)pebbleRoute
 {
 	if (!_pebbleRoute) _pebbleRoute = [[PebbleRoute alloc] init];
@@ -64,17 +72,19 @@
 	return _destinationHistory;
 }
 
+#pragma mark - public API
+
 - (void)setDestination:(MKPlacemark *)destination
 {
 	_destination = destination;
-	MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-	[annotation setCoordinate:destination.coordinate];
-	[self.map addAnnotation:annotation];
+	self.destinationAnnotation.coordinate = destination.coordinate;
+
+	[self.destinationAnnotation setCoordinate:destination.coordinate];
     self.title = destination.name;
     [self calculateRoute];
 }
 
-#pragma mark - route functions
+#pragma mark - internal methods
 
 - (void)calculateRoute
 {
@@ -119,6 +129,7 @@
     return renderer;
 }
 
+// show the route after the route was calculated
 -(void)showRoute:(MKRoute *)route
 {
 	if (self.directionsVC.route) {
@@ -155,6 +166,8 @@
 				  ];
 }
 
+#pragma mark - MKMapViewDelegate protocoll
+
 // user moved and his position got updated
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
@@ -172,9 +185,12 @@
 	}
 	
 	self.region = region;
+	// update the current user location in our model
 	self.pebbleRoute.currentUserLocation = userLocation.location;
 	[self updateLocationOnMap];
 }
+
+#pragma mark - segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -203,17 +219,14 @@
 	 ];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+#pragma unwind segue actions
 
+// FindDestinationViewController will call this action on unwind
 - (IBAction)selectDestination:(UIStoryboardSegue *)segue {
 	self.destination = [[segue sourceViewController] selectedDestination];
 }
 
-#pragma mark - DirectionsViewControllerDelegate
+#pragma mark - DirectionsViewControllerDelegate protocoll
 
 // user clicked on a table row in the directions table mvc
 - (void)didSelectLocation:(CLLocationCoordinate2D)location
