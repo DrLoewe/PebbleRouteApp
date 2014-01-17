@@ -24,16 +24,8 @@
 - (void)setRoute:(MKRoute *)route
 {
 	_route = route;
-	self.currentStep = [self.route.steps firstObject];
-	[self calculateDistance];
     [self calculateCurrentStep];
-}
-
-// get the distance (in m) from a specified location to self.location
-- (NSUInteger)distanceFrom: (CLLocationCoordinate2D)from {
-	CLLocation *toLocation = [[CLLocation alloc] initWithLatitude:from.latitude
-													  longitude:from.longitude];
-	return [self.location distanceFromLocation:toLocation];
+	[self calculateDistance];
 }
 
 // calculate the total distance to the final destination using the current location of the user
@@ -50,9 +42,9 @@
 	}
 }
 
-- (void)setLocation:(CLLocation *)location
+- (void)setCurrentUserLocation:(CLLocation *)location
 {
-	_location = location;
+	_currentUserLocation = location;
     [self calculateCurrentStep];
 	[self calculateDistance];
 }
@@ -61,7 +53,7 @@
 // currentStep and remaining distance accordingly
 - (void)calculateCurrentStep
 {
-    MKMapPoint origin = MKMapPointForCoordinate(self.location.coordinate);
+    MKMapPoint origin = MKMapPointForCoordinate(self.currentUserLocation.coordinate);
     float minDistance = MAXFLOAT;
     MKMapPoint pointOnPath;
     MKRouteStep *currentStep;
@@ -81,10 +73,6 @@
             }
         }
     }
-
-//    CLLocationCoordinate2D coordOnRoute = MKCoordinateForMapPoint(pointOnPath);
-//    float distance = [self.location distanceFromLocation:[[CLLocation alloc] initWithLatitude:coordOnRoute.latitude longitude:coordOnRoute.longitude]];
-//    NSLog(@"distance to route: %.1fm", distance);
 
     self.currentStep = currentStep;
 

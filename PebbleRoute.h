@@ -11,7 +11,7 @@
 
 @interface PebbleRoute : NSObject
 @property (nonatomic, strong) MKRoute *route;
-@property (nonatomic, strong) CLLocation *location;
+@property (nonatomic, strong) CLLocation *currentUserLocation;
 @property (nonatomic, weak, readonly) MKRouteStep *currentStep;
 @property (nonatomic, readonly) float distance; // from current location to final destination
 @property (nonatomic, readonly) float remainingDistanceInCurrentStep;
