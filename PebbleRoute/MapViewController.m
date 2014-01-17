@@ -22,6 +22,7 @@
 @property (nonatomic, strong) PebbleRoute *pebbleRoute; // our model
 @property (nonatomic, weak) MKRouteStep *currentStep; // on our route
 @property (nonatomic, strong) MKPointAnnotation *destinationAnnotation;
+@property (nonatomic, strong) MKPointAnnotation *routeStepAnnotation;
 @end
 
 @implementation MapViewController
@@ -52,6 +53,13 @@
 	if (!_destinationAnnotation) _destinationAnnotation = [[MKPointAnnotation alloc] init];
 	[self.map addAnnotation:_destinationAnnotation];
 	return _destinationAnnotation;
+}
+
+- (MKPointAnnotation *)routeStepAnnotation
+{
+	if (!_routeStepAnnotation) _routeStepAnnotation = [[MKPointAnnotation alloc] init];
+	[self.map addAnnotation:_routeStepAnnotation];
+	return _routeStepAnnotation;
 }
 
 - (PebbleRoute *)pebbleRoute
@@ -144,6 +152,7 @@
 	[self.map addOverlay:route.polyline level:MKOverlayLevelAboveRoads];
 	self.currentStep = nil;
 	[self updateLocationOnMap];
+	[self.map setRegion:self.region animated:YES];
 }
 
 - (void)updateLocationOnMap
@@ -158,6 +167,7 @@
 			[self.map removeOverlay:currentRoutePath];
 		currentRoutePath = [self.pebbleRoute currentRoutePath];
 		[self.map addOverlay:currentRoutePath];
+		[self.routeStepAnnotation setCoordinate:self.pebbleRoute.currentStep.polyline.coordinate];
 	}
 	[self.directionsVC setCurrentStep:self.pebbleRoute.currentStep distance:self.pebbleRoute.remainingDistanceInCurrentStep];
 	self.title = [NSString stringWithFormat:@"%@ ⇢ %@",
@@ -236,13 +246,7 @@
 	region.span.latitudeDelta = .02;
 	region.span.longitudeDelta = .02;
 	[self.map setRegion:region animated:YES];
-	
-	static MKPointAnnotation *annotation = nil;
-	[self.map removeAnnotation:annotation];
-
-	annotation = [[MKPointAnnotation alloc] init];
-	[annotation setCoordinate:location];
-	[self.map addAnnotation:annotation];
+	[self.routeStepAnnotation setCoordinate:location];
 }
 
 @end
