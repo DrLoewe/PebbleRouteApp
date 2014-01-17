@@ -16,10 +16,7 @@
 
 @implementation PebbleRoute
 
-- (MKPolyline *)currentRoutePath
-{
-	return self.currentStep.polyline;
-}
+#pragma mark - properties
 
 - (void)setRoute:(MKRoute *)route
 {
@@ -27,6 +24,22 @@
     [self calculateCurrentStep];
 	[self calculateDistance];
 }
+
+- (void)setCurrentUserLocation:(CLLocation *)location
+{
+	_currentUserLocation = location;
+    [self calculateCurrentStep];
+	[self calculateDistance];
+}
+
+#pragma mark - public API
+
+- (MKPolyline *)currentRoutePath
+{
+	return self.currentStep.polyline;
+}
+
+#pragma mark - internal methods
 
 // calculate the total distance to the final destination using the current location of the user
 - (void)calculateDistance
@@ -40,13 +53,6 @@
 		}
 		self.distance = totalDistance;
 	}
-}
-
-- (void)setCurrentUserLocation:(CLLocation *)location
-{
-	_currentUserLocation = location;
-    [self calculateCurrentStep];
-	[self calculateDistance];
 }
 
 // determine which is the current step in the current route and set the properties
