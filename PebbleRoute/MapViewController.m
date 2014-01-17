@@ -172,7 +172,7 @@
 	}
 	
 	self.region = region;
-	self.pebbleRoute.location = userLocation.location;
+	self.pebbleRoute.currentUserLocation = userLocation.location;
 	[self updateLocationOnMap];
 }
 
