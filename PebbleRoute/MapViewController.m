@@ -147,8 +147,8 @@
 			[self.map removeOverlay:currentRoutePath];
 		currentRoutePath = [self.pebbleRoute currentRoutePath];
 		[self.map addOverlay:currentRoutePath];
-		self.directionsVC.currentStep = self.pebbleRoute.currentStep;
 	}
+	[self.directionsVC setCurrentStep:self.pebbleRoute.currentStep distance:self.pebbleRoute.remainingDistanceInCurrentStep];
 	self.title = [NSString stringWithFormat:@"%@ ⇢ %@",
 				  [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance],
 				  self.destination.name

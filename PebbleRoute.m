@@ -10,7 +10,8 @@
 
 @interface PebbleRoute()
 @property (nonatomic, weak, readwrite) MKRouteStep *currentStep;
-@property (nonatomic, readwrite) NSUInteger distance;
+@property (nonatomic, readwrite) float distance;
+@property (nonatomic, readwrite) float remainingDistanceInCurrentStep;
 @end
 
 @implementation PebbleRoute
@@ -40,21 +41,12 @@
 {
 	NSUInteger indexOfCurrentStep = [self.route.steps indexOfObject:self.currentStep];
 	if (indexOfCurrentStep != NSNotFound) {
-		if (self.route.steps.count > (indexOfCurrentStep+1)) {
-			
-			int totalDistance = 0; // total distance to destination
-			
-			MKRouteStep *nextStep = self.route.steps[indexOfCurrentStep+1];
-			NSUInteger distanceToNextStep = [self distanceFrom:nextStep.polyline.coordinate];
-			totalDistance += distanceToNextStep;
-			
-			for (int i=indexOfCurrentStep+2; i<self.route.steps.count; i++) {
-				MKRouteStep *step = self.route.steps[i];
-				totalDistance += step.distance;
-			}
-			if (totalDistance) self.distance = totalDistance;
-			//			NSLog(@"total distance: %.1dm",totalDistance);
+		float totalDistance = self.remainingDistanceInCurrentStep;
+		for (NSUInteger i=indexOfCurrentStep+1; i<self.route.steps.count; i++) {
+			MKRouteStep *step = self.route.steps[i];
+			totalDistance += step.distance;
 		}
+		self.distance = totalDistance;
 	}
 }
 
@@ -65,13 +57,15 @@
 	[self calculateDistance];
 }
 
-// calculate the minimum distance from the current location to a given routeStep
+// determine which is the current step in the current route and set the properties
+// currentStep and remaining distance accordingly
 - (void)calculateCurrentStep
 {
     MKMapPoint origin = MKMapPointForCoordinate(self.location.coordinate);
     float minDistance = MAXFLOAT;
     MKMapPoint pointOnPath;
     MKRouteStep *currentStep;
+	NSUInteger pointIndex;
 
     for (MKRouteStep *routeStep in self.route.steps) {
         for (NSUInteger i=0; i<routeStep.polyline.pointCount; i++) {
@@ -80,6 +74,7 @@
             float dy = point.y - origin.y;
             float distance = dx * dx + dy * dy;
             if (distance <= minDistance) {
+				pointIndex = i;
                 minDistance = distance;
                 pointOnPath = point;
                 currentStep = routeStep;
@@ -90,7 +85,32 @@
 //    CLLocationCoordinate2D coordOnRoute = MKCoordinateForMapPoint(pointOnPath);
 //    float distance = [self.location distanceFromLocation:[[CLLocation alloc] initWithLatitude:coordOnRoute.latitude longitude:coordOnRoute.longitude]];
 //    NSLog(@"distance to route: %.1fm", distance);
+
     self.currentStep = currentStep;
+
+	if (self.currentStep.polyline.pointCount < 2) {
+		self.remainingDistanceInCurrentStep = 0;
+	} else {
+		float totalDistance = 0;
+		float distanceFromPointToEnd = 0;
+		for (NSUInteger i=0; i<self.currentStep.polyline.pointCount-1; i++) {
+			float distance = [PebbleRoute distanceFrom:self.currentStep.polyline.points[i]
+													to:self.currentStep.polyline.points[i+1]];
+			totalDistance += distance;
+			if (i >= pointIndex) {
+				distanceFromPointToEnd += distance;
+			}
+		}
+		self.remainingDistanceInCurrentStep = distanceFromPointToEnd / totalDistance * self.currentStep.distance;
+		//		NSLog(@"remaining distance in current step: %.1f", self.remainingDistanceInCurrentStep);
+	}
+}
+
++ (float)distanceFrom:(MKMapPoint)from to:(MKMapPoint)to
+{
+	float dx = from.x - to.x;
+	float dy = from.y - to.y;
+	return sqrtf(dx * dx + dy * dy);
 }
 
 @end

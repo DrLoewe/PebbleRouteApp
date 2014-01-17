@@ -10,13 +10,16 @@
 
 @interface DirectionsViewController ()
 @property (nonatomic, strong) MKDistanceFormatter *distanceFormatter;
+@property (nonatomic, weak) MKRouteStep *currentStep;
+@property (nonatomic) float remainingDistanceInCurrentStep;
 @end
 
 @implementation DirectionsViewController
 
-- (void)setCurrentStep:(MKRouteStep *)currentStep
+- (void)setCurrentStep:(MKRouteStep *)currentStep distance:(float)distance
 {
-	_currentStep = currentStep;
+	self.currentStep = currentStep;
+	self.remainingDistanceInCurrentStep = distance;
     NSUInteger index = [self.route.steps indexOfObject:self.currentStep];
     if (index != NSNotFound) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
@@ -44,11 +47,14 @@
     MKRouteStep *step = self.route.steps[indexPath.row];
 
 	NSDictionary *attributes = nil;
-	if (step == self.currentStep)
+	CLLocationDistance distance = step.distance;
+	if (step == self.currentStep) {
 		attributes = @{NSForegroundColorAttributeName: [UIColor blueColor] };
+		distance = self.remainingDistanceInCurrentStep;
+	}
 	
 	NSString *instructionsString = step.distance ? [NSString stringWithFormat:@"%@, %@",
-													[[self.distanceFormatter stringFromDistance: step.distance] stringByReplacingOccurrencesOfString:@" " withString:@""],
+													[[self.distanceFormatter stringFromDistance: distance] stringByReplacingOccurrencesOfString:@" " withString:@""],
 													step.instructions] : step.instructions;
 
     cell.textLabel.attributedText = attributes ?

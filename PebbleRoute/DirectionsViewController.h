@@ -12,6 +12,9 @@
 
 @interface DirectionsViewController : UITableViewController
 @property (strong, nonatomic) MKRoute *route;
-@property (nonatomic, weak) MKRouteStep *currentStep;
+
+// set the current step and the remaining distance in this step
+- (void)setCurrentStep:(MKRouteStep *)currentStep distance:(float)distance;
+
 @property (nonatomic, weak) id <DirectionsViewControllerDelegate> delegate;
 @end
