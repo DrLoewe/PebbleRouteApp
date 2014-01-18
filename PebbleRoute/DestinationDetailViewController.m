@@ -7,6 +7,7 @@
 //
 
 #import "DestinationDetailViewController.h"
+#import <MapKit/MapKit.h>
 
 @interface DestinationDetailViewController () <UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
@@ -14,7 +15,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *phoneLabel;
 @property (weak, nonatomic) IBOutlet UILabel *urlLabel;
 @property (weak, nonatomic) IBOutlet UILabel *testLabel;
-
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @end
 
 @implementation DestinationDetailViewController
@@ -24,7 +25,27 @@
 	self.title = self.mapItem.placemark.name;
 	self.addressLabel.text = self.mapItem.placemark.addressDictionary[@"Street"];
 	self.phoneLabel.text = self.mapItem.phoneNumber;
-	self.urlLabel.text = [self.mapItem.url description];
+
+	if (self.mapItem.url) {
+		// strip the scheme (http, https) and "://" from the url description
+		self.urlLabel.text = [[self.mapItem.url description] stringByReplacingCharactersInRange:
+							  NSMakeRange(0, self.mapItem.url.scheme.length+3) withString:@""];
+	}
+	
+	// lazy instantiate this guy
+	static MKPointAnnotation *destinationAnnotation = nil;
+	if (!destinationAnnotation) destinationAnnotation = [[MKPointAnnotation alloc] init];
+
+	destinationAnnotation.title = self.title;
+	destinationAnnotation.coordinate = self.mapItem.placemark.coordinate;
+	[self.mapView addAnnotation:destinationAnnotation];
+
+	MKCoordinateRegion region;
+	region.center = self.mapItem.placemark.coordinate;
+	region.span.latitudeDelta = .02;
+	region.span.longitudeDelta = .02;
+	
+	[self.mapView setRegion:region animated:NO];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
