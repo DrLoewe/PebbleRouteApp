@@ -188,12 +188,13 @@
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
+	static NSString *pinViewIdentifier = @"pinView";
 	if (annotation == self.map.userLocation) return nil;
 	
-	MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"pinView"];
+	MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:pinViewIdentifier];
 	if (!pinView) {
 		pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation
-												  reuseIdentifier:@"pinView"];
+												  reuseIdentifier:pinViewIdentifier];
 	}
 
 	pinView.pinColor =
