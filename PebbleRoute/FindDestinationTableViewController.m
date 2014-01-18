@@ -62,7 +62,7 @@
 
 - (void)searchDestination:(NSString *)text
 {
-	NSLog(@"searching for'%@'",text);
+	//	NSLog(@"searching for'%@'",text);
 	
 	[self.localSearch cancel];
 	self.localSearch = nil;
