@@ -89,6 +89,7 @@
 	self.destinationAnnotation.coordinate = destination.coordinate;
 
 	[self.destinationAnnotation setCoordinate:destination.coordinate];
+	self.destinationAnnotation.title = destination.name;
     self.title = destination.name;
     [self calculateRoute];
 }
@@ -199,6 +200,8 @@
 	annotation == self.destinationAnnotation ? MKPinAnnotationColorGreen :
 	annotation == self.routeStepAnnotation ? MKPinAnnotationColorPurple :
 	MKPinAnnotationColorRed;
+	
+	pinView.canShowCallout = YES;
 
 	return pinView;
 }
