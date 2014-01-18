@@ -220,7 +220,7 @@
 	static CLLocation *lastLocation = nil;
 	if (!lastLocation || [userLocation.location distanceFromLocation:lastLocation] > SIGNIFICANT_DISTANCE_FOR_UPDATE_UI) {
 		lastLocation = userLocation.location;
-		NSLog(@"location updated");
+		//		NSLog(@"location updated");
 		// update the current user location in our model
 		self.pebbleRoute.currentUserLocation = userLocation.location;
 		[self updateLocationOnMap];

@@ -64,6 +64,7 @@
 			// place phone call
 			if (!self.mapItem.phoneNumber) {
 				cell.accessoryType = UITableViewCellAccessoryNone;
+				cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			}
 			break;
 			
@@ -71,6 +72,7 @@
 			// call url
 			if (!self.mapItem.url) {
 				cell.accessoryType = UITableViewCellAccessoryNone;
+				cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			}
 			break;
 			
