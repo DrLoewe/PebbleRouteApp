@@ -28,19 +28,7 @@
 
 @implementation MapViewController
 
-#pragma mark - Gesture Recognizer Actions
-
-- (IBAction)tap:(id)sender {
-	self.toolbar.hidden = NO;
-	[sender setCancelsTouchesInView:NO];
-}
-
 #pragma mark - Outlets
-
-- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
-{
-	self.toolbar.hidden = YES;
-}
 
 // recalculate route button (refresh icon in the top toolbar)
 - (IBAction)recalculateRoute:(id)sender {
@@ -189,6 +177,7 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
 	static NSString *pinViewIdentifier = @"pinView";
+	
 	if (annotation == self.map.userLocation) return nil;
 	
 	MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:pinViewIdentifier];
@@ -254,6 +243,9 @@
 	self.map.delegate = self;
 	MKUserTrackingBarButtonItem *trackingButton = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.map];
 	[self.toolbar setItems:@[
+							 [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+																		   target:nil
+																		   action:nil],
 							 trackingButton] animated:YES
 	 ];
 }

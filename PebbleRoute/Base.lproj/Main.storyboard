@@ -31,9 +31,10 @@
                                     <segue destination="8zg-4T-Bq7" kind="embed" identifier="Show Directions" id="KNe-rJ-eTd"/>
                                 </connections>
                             </containerView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qvz-Lv-FVT">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qvz-Lv-FVT">
                                 <rect key="frame" x="0.0" y="372" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <items/>
                             </toolbar>
                             <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No active route!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yuw-AL-2Eg">
@@ -64,9 +65,6 @@
                             <constraint firstItem="VKC-tW-XnX" firstAttribute="trailing" secondItem="8VZ-T4-lcm" secondAttribute="trailing" id="qhj-5z-A9P"/>
                             <constraint firstItem="8VZ-T4-lcm" firstAttribute="leading" secondItem="0He-sH-x6j" secondAttribute="leading" id="wOh-7a-ZPf"/>
                         </constraints>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="7Tk-NM-mcy" appends="YES" id="KUQ-Xr-zNs"/>
-                        </connections>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="Map" id="rHP-VB-bcF">
@@ -89,11 +87,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JyV-yD-On0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="7Tk-NM-mcy">
-                    <connections>
-                        <action selector="tap:" destination="3yQ-ua-Cal" id="T0Q-oX-b1n"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="100" y="-111"/>
         </scene>
