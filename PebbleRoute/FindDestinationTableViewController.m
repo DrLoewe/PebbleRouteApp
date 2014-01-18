@@ -15,7 +15,10 @@
 @property (nonatomic) BOOL firstCall;
 @end
 
+static NSInteger lastSelectedRow = -1;
+
 @implementation FindDestinationTableViewController
+
 
 - (NSMutableArray *)history
 {
@@ -127,6 +130,9 @@
 	cell.detailTextLabel.text = [NSString stringWithFormat:@"[%.1fkm] %@",
 								 dist/1000.0,
 								 street];
+	if (lastSelectedRow == indexPath.row) {
+		cell.tintColor = [UIColor blackColor];
+	}
     return cell;
 }
 
@@ -141,8 +147,12 @@
 		mapItem = self.history[indexPath.row];
 	} else {
 		indexPath = [[[segue.sourceViewController searchDisplayController] searchResultsTableView] indexPathForCell:cell];
-		if (indexPath)
+		if (indexPath) {
 			mapItem = self.searchResponse.mapItems[indexPath.row];
+			//			NSLog(@"lastSelectedRow set now to %d",indexPath.row);
+			lastSelectedRow = indexPath.row;
+			[self.searchDisplayController.searchResultsTableView reloadData];
+		}
 	}
 
 	if ([segue.destinationViewController isKindOfClass:[DestinationDetailViewController class]]) {
