@@ -13,6 +13,9 @@
 #import "PebbleRoute.h"
 #import "DateTimeFormatter.h"
 
+// treshold for location change delta to update UI stuff in m
+#define SIGNIFICANT_DISTANCE_FOR_UPDATE_UI 25
+
 @interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (nonatomic, weak) DirectionsViewController *directionsVC;
@@ -213,9 +216,15 @@
 	}
 	
 	self.region = region;
-	// update the current user location in our model
-	self.pebbleRoute.currentUserLocation = userLocation.location;
-	[self updateLocationOnMap];
+	// perform further updates only if the user location has changed significantly
+	static CLLocation *lastLocation = nil;
+	if (!lastLocation || [userLocation.location distanceFromLocation:lastLocation] > SIGNIFICANT_DISTANCE_FOR_UPDATE_UI) {
+		lastLocation = userLocation.location;
+		NSLog(@"location updated");
+		// update the current user location in our model
+		self.pebbleRoute.currentUserLocation = userLocation.location;
+		[self updateLocationOnMap];
+	}
 }
 
 #pragma mark - segue
