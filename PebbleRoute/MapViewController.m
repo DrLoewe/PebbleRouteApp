@@ -215,6 +215,10 @@
 		[self.map setRegion:region animated:YES];
 	}
 	
+	if (!self.destination) {
+		self.title = userLocation.title;
+	}
+	
 	self.region = region;
 	// perform further updates only if the user location has changed significantly
 	static CLLocation *lastLocation = nil;
