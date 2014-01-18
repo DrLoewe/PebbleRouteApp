@@ -13,12 +13,18 @@
 @property (strong, nonatomic) MKLocalSearch *localSearch;
 @property (strong, nonatomic) MKLocalSearchResponse *searchResponse;
 @property (nonatomic) BOOL firstCall;
+@property (nonatomic, strong) MKDistanceFormatter *distanceFormatter;
 @end
 
 static NSInteger lastSelectedRow = -1;
 
 @implementation FindDestinationTableViewController
 
+- (MKDistanceFormatter *)distanceFormatter
+{
+	if (!_distanceFormatter) _distanceFormatter = [[MKDistanceFormatter alloc] init];
+	return _distanceFormatter;
+}
 
 - (NSMutableArray *)history
 {
@@ -127,8 +133,8 @@ static NSInteger lastSelectedRow = -1;
 	CLLocation *origin = [[CLLocation alloc] initWithLatitude:self.region.center.latitude
 													longitude:self.region.center.longitude];
 	int dist = [item.placemark.location distanceFromLocation:origin];
-	cell.detailTextLabel.text = [NSString stringWithFormat:@"[%.1fkm] %@",
-								 dist/1000.0,
+	cell.detailTextLabel.text = [NSString stringWithFormat:@"[%@] %@",
+								 [self.distanceFormatter stringFromDistance:dist],
 								 street];
 	if (lastSelectedRow == indexPath.row) {
 		cell.tintColor = [UIColor blackColor];
