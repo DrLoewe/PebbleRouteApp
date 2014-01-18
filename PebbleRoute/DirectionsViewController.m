@@ -20,18 +20,23 @@
 
 - (void)setCurrentStep:(MKRouteStep *)currentStep distance:(float)distance
 {
-	self.remainingDistanceInCurrentStep = distance;
-
     NSUInteger oldIndex = [self.route.steps indexOfObject:self.currentStep];
 	self.currentStep = currentStep;
     NSUInteger newIndex = [self.route.steps indexOfObject:self.currentStep];
 
     if (newIndex != NSNotFound && oldIndex != newIndex) {
+		self.remainingDistanceInCurrentStep = distance;
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:newIndex inSection:0]
                               atScrollPosition:UITableViewScrollPositionMiddle
                                       animated:YES];
-    }
-	[self.tableView reloadData];
+		[self.tableView reloadData];
+    } else {
+		if (self.remainingDistanceInCurrentStep != distance) {
+			self.remainingDistanceInCurrentStep = distance;
+			[self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:oldIndex
+																		inSection:0]] withRowAnimation:NO];
+		}
+	}
 }
 
 - (MKDistanceFormatter *)distanceFormatter
