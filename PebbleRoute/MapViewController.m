@@ -131,7 +131,7 @@
 	if (overlay == self.pebbleRoute.route.polyline) {
 		renderer.strokeColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:.4];
 	} else {
-		renderer.strokeColor = [UIColor blueColor];
+		renderer.strokeColor = [UIColor colorWithRed:.5 green:0 blue:.5 alpha:.4];
 	}
 
     renderer.lineWidth = 5.0;
@@ -168,6 +168,7 @@
 	if (!self.pebbleRoute.route) return;
 	
 	if (self.currentStep != self.pebbleRoute.currentStep) {
+		// currentStep changed
 		self.currentStep = self.pebbleRoute.currentStep;
 		if (currentRoutePath)
 			[self.map removeOverlay:currentRoutePath];
@@ -186,6 +187,8 @@
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
+	if (annotation == self.map.userLocation) return nil;
+	
 	MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"pinView"];
 	if (!pinView) {
 		pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation

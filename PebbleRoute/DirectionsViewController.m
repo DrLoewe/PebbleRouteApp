@@ -16,13 +16,18 @@
 
 @implementation DirectionsViewController
 
+#pragma mark - Public API
+
 - (void)setCurrentStep:(MKRouteStep *)currentStep distance:(float)distance
 {
-	self.currentStep = currentStep;
 	self.remainingDistanceInCurrentStep = distance;
-    NSUInteger index = [self.route.steps indexOfObject:self.currentStep];
-    if (index != NSNotFound) {
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
+
+    NSUInteger oldIndex = [self.route.steps indexOfObject:self.currentStep];
+	self.currentStep = currentStep;
+    NSUInteger newIndex = [self.route.steps indexOfObject:self.currentStep];
+
+    if (newIndex != NSNotFound && oldIndex != newIndex) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:newIndex inSection:0]
                               atScrollPosition:UITableViewScrollPositionMiddle
                                       animated:YES];
     }
