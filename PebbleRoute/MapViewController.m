@@ -184,6 +184,22 @@
 
 #pragma mark - MKMapViewDelegate protocoll
 
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+{
+	MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"pinView"];
+	if (!pinView) {
+		pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation
+												  reuseIdentifier:@"pinView"];
+	}
+
+	pinView.pinColor =
+	annotation == self.destinationAnnotation ? MKPinAnnotationColorGreen :
+	annotation == self.routeStepAnnotation ? MKPinAnnotationColorPurple :
+	MKPinAnnotationColorRed;
+
+	return pinView;
+}
+
 // user moved and his position got updated
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
