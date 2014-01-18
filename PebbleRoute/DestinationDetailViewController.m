@@ -36,6 +36,29 @@
 	}
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	switch (indexPath.row) {
+		case 1:
+			// place phone call
+			if (!self.mapItem.phoneNumber) {
+				cell.accessoryType = UITableViewCellAccessoryNone;
+			}
+			break;
+			
+		case 2:
+			// call url
+			if (!self.mapItem.url) {
+				cell.accessoryType = UITableViewCellAccessoryNone;
+			}
+			break;
+			
+		default:
+			break;
+	}
+	
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	switch (indexPath.row) {
