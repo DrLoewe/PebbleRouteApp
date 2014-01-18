@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D8189AF6188A8C8100DFAB0C /* DateTimeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = D8189AF5188A8C8100DFAB0C /* DateTimeFormatter.m */; };
 		D83D03041885782000EDC2BE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83D03031885782000EDC2BE /* Foundation.framework */; };
 		D83D03061885782000EDC2BE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83D03051885782000EDC2BE /* CoreGraphics.framework */; };
 		D83D03081885782000EDC2BE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83D03071885782000EDC2BE /* UIKit.framework */; };
@@ -40,6 +41,8 @@
 
 /* Begin PBXFileReference section */
 		D813C2241885D17500034D49 /* DirectionsViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DirectionsViewControllerDelegate.h; sourceTree = "<group>"; };
+		D8189AF4188A8C8100DFAB0C /* DateTimeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTimeFormatter.h; sourceTree = "<group>"; };
+		D8189AF5188A8C8100DFAB0C /* DateTimeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateTimeFormatter.m; sourceTree = "<group>"; };
 		D83D03001885782000EDC2BE /* PebbleRoute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PebbleRoute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83D03031885782000EDC2BE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D83D03051885782000EDC2BE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -141,6 +144,8 @@
 				D83D034518857C3800EDC2BE /* Controller */,
 				D83D031B1885782000EDC2BE /* Images.xcassets */,
 				D83D030A1885782000EDC2BE /* Supporting Files */,
+				D8189AF4188A8C8100DFAB0C /* DateTimeFormatter.h */,
+				D8189AF5188A8C8100DFAB0C /* DateTimeFormatter.m */,
 			);
 			path = PebbleRoute;
 			sourceTree = "<group>";
@@ -304,6 +309,7 @@
 				D83D033F18857A1500EDC2BE /* FindDestinationTableViewController.m in Sources */,
 				D83D03141885782000EDC2BE /* PebbleRouteAppDelegate.m in Sources */,
 				D83D03101885782000EDC2BE /* main.m in Sources */,
+				D8189AF6188A8C8100DFAB0C /* DateTimeFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

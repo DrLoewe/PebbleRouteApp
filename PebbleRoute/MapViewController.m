@@ -11,6 +11,7 @@
 #import "DirectionsViewController.h"
 #import "DirectionsViewControllerDelegate.h"
 #import "PebbleRoute.h"
+#import "DateTimeFormatter.h"
 
 @interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *map;
@@ -137,6 +138,8 @@
     return renderer;
 }
 
+
+
 // show the route after the route was calculated
 -(void)showRoute:(MKRoute *)route
 {
@@ -146,13 +149,16 @@
 		[self.map removeOverlay:oldRoute.polyline];
 	}
     self.directionsVC.route = route;
-	self.RouteDistanceLabel.text = [NSString stringWithFormat:@"∑ %@",
-									[self.distanceFormatter stringFromDistance:route.distance]];
+	self.RouteDistanceLabel.text = [NSString stringWithFormat:@"∑ %@ (%@)",
+									[self.distanceFormatter stringFromDistance:route.distance],
+									[DateTimeFormatter shortStringForTimeInterval:route.expectedTravelTime]
+									];
 	self.RouteDistanceLabel.hidden = NO;
 	[self.map addOverlay:route.polyline level:MKOverlayLevelAboveRoads];
 	self.currentStep = nil;
 	[self updateLocationOnMap];
 	[self.map setRegion:self.region animated:YES];
+	
 }
 
 - (void)updateLocationOnMap
