@@ -27,6 +27,7 @@
 @property (nonatomic, weak) MKRouteStep *currentStep; // on our route
 @property (nonatomic, strong) MKPointAnnotation *destinationAnnotation;
 @property (nonatomic, strong) MKPointAnnotation *routeStepAnnotation;
+@property (weak, nonatomic) IBOutlet UIView *directionsContainerView;
 @end
 
 @implementation MapViewController
@@ -82,6 +83,7 @@
 	[self.destinationAnnotation setCoordinate:destination.coordinate];
 	self.destinationAnnotation.title = destination.name;
     self.title = destination.name;
+	self.directionsContainerView.hidden = YES;
     [self calculateRoute];
 }
 
@@ -150,6 +152,7 @@
 	self.currentStep = nil;
 	[self updateLocationOnMap];
 	[self.map setRegion:self.region animated:YES];
+	self.directionsContainerView.hidden = NO;
 	
 }
 

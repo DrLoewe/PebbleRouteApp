@@ -73,16 +73,10 @@
     return cell;
 }
 
-- (void)updateUI
-{
-    [self.view setHidden:self.route == nil];
-    [self.tableView reloadData];
-}
-
 - (void)setRoute:(MKRoute *)route
 {
     _route = route;
-    [self updateUI];
+    [self.tableView reloadData];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -92,13 +86,6 @@
         // Custom initialization
     }
     return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    [self updateUI];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

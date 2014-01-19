@@ -21,7 +21,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <gestureRecognizers/>
                             </mapView>
-                            <containerView opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VKC-tW-XnX">
+                            <containerView hidden="YES" opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VKC-tW-XnX">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="126"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -81,6 +81,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="RouteDistanceLabel" destination="yuw-AL-2Eg" id="Zud-pO-ZhU"/>
+                        <outlet property="directionsContainerView" destination="VKC-tW-XnX" id="D8T-es-SRw"/>
                         <outlet property="map" destination="8VZ-T4-lcm" id="Hsf-Nz-kTY"/>
                         <outlet property="refreshButton" destination="Qgb-H6-g1Y" id="geG-8A-Zg6"/>
                         <outlet property="toolbar" destination="qvz-Lv-FVT" id="Msd-qC-M7B"/>
