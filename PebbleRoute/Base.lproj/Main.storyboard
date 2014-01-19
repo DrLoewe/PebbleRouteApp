@@ -99,7 +99,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="UgI-xV-4k6">
+                        <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Local search, e.g. Pizza" id="UgI-xV-4k6">
                             <rect key="frame" x="0.0" y="64" width="320" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits"/>
@@ -132,7 +132,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="5fi-Ta-KUL" kind="unwind" unwindAction="selectDestination:" id="gqQ-Bd-A3U"/>
+                                    <segue destination="5fi-Ta-KUL" kind="unwind" identifier="unwind segue" unwindAction="selectDestination:" id="gqQ-Bd-A3U"/>
                                     <segue destination="FB7-cT-Sg6" kind="push" trigger="accessoryAction" id="DZW-ZG-fLX"/>
                                 </connections>
                             </tableViewCell>
@@ -142,7 +142,13 @@
                             <outlet property="delegate" destination="ije-Mk-bBn" id="ex9-Nl-R3P"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="vyA-ea-re3"/>
+                    <navigationItem key="navigationItem" id="vyA-ea-re3">
+                        <barButtonItem key="rightBarButtonItem" systemItem="bookmarks" id="ud5-xI-s7u">
+                            <connections>
+                                <action selector="selectAddressFromLocalAB:" destination="ije-Mk-bBn" id="WF8-iw-wab"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="searchDisplayController" destination="Zwg-aw-8Fk" id="Mzy-BY-4G2"/>
                     </connections>

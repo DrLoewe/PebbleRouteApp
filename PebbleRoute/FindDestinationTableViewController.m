@@ -8,8 +8,9 @@
 
 #import "FindDestinationTableViewController.h"
 #import "DestinationDetailViewController.h"
+#import <AddressBookUI/AddressBookUI.h>
 
-@interface FindDestinationTableViewController () <UISearchBarDelegate, UITableViewDelegate>
+@interface FindDestinationTableViewController () <UISearchBarDelegate, UITableViewDelegate, ABPeoplePickerNavigationControllerDelegate>
 @property (strong, nonatomic) MKLocalSearch *localSearch;
 @property (strong, nonatomic) MKLocalSearchResponse *searchResponse;
 @property (nonatomic) BOOL firstCall;
@@ -19,6 +20,7 @@
 static NSInteger lastSelectedRow = -1;
 
 @implementation FindDestinationTableViewController
+
 
 - (MKDistanceFormatter *)distanceFormatter
 {
@@ -58,7 +60,7 @@ static NSInteger lastSelectedRow = -1;
     [super viewDidAppear:animated];
     if (!self.history.count && self.firstCall) {
         // no items in our history, auto select the search field
-        [self.searchDisplayController.searchBar becomeFirstResponder];
+		//        [self.searchDisplayController.searchBar becomeFirstResponder];
 		self.firstCall = NO;
     }
 }
@@ -99,6 +101,73 @@ static NSInteger lastSelectedRow = -1;
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
 	//	[self searchDestination:searchText];
+}
+
+#pragma mark - AddressBook picker and delegate methods
+
+- (IBAction)selectAddressFromLocalAB:(id)sender {
+	ABPeoplePickerNavigationController *picker =
+	[[ABPeoplePickerNavigationController alloc] init];
+	picker.peoplePickerDelegate = self;
+	[self presentViewController:picker animated:YES completion:NULL];
+}
+
+- (void)peoplePickerNavigationControllerDidCancel:
+(ABPeoplePickerNavigationController *)peoplePicker
+{
+	[self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person
+{
+	return YES;
+}
+
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
+	  shouldContinueAfterSelectingPerson:(ABRecordRef)person
+								property:(ABPropertyID)property
+							  identifier:(ABMultiValueIdentifier)identifier
+{
+	if (property == kABPersonAddressProperty) {
+		NSString *name = (__bridge_transfer NSString*)ABRecordCopyCompositeName(person);
+		//		NSLog(@"selected person: %@",name);
+
+		ABMultiValueRef addresses = ABRecordCopyValue(person, property);
+		CFIndex index = ABMultiValueGetIndexForIdentifier(addresses, identifier);
+		CFTypeRef cf_address = ABMultiValueCopyValueAtIndex(addresses, index);
+
+		NSDictionary *address = (__bridge_transfer NSDictionary*)cf_address;
+		//		CFRelease(cf_address); // no release because we transfered this ressource to ARC
+		CFRelease(addresses);
+		//		NSLog(@"selected %@ with address %@",name, address);
+
+		CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+		[geocoder geocodeAddressDictionary:address completionHandler:^(NSArray *placemarks, NSError *error) {
+			CLPlacemark *abPlacemark = [placemarks firstObject];
+			if (error) {
+				NSLog(@"geocode error: %@", [error localizedDescription]);
+			} else if (abPlacemark) {
+				//				NSLog(@"placemark: %@", abPlacemark);
+				MKMapItem *abMapItem;
+				if ([abPlacemark.region isKindOfClass:[CLCircularRegion class]]) {
+					CLCircularRegion *region = (CLCircularRegion *)abPlacemark.region;
+					abMapItem =
+					[[MKMapItem alloc] initWithPlacemark:[[MKPlacemark alloc]
+														  initWithCoordinate:region.center
+														  addressDictionary: address]];
+					abMapItem.name = name;
+					[self.history addObject:abMapItem];
+					[self.tableView reloadData];
+					[self performSegueWithIdentifier:@"unwind segue" sender:abMapItem];
+				}
+			}
+		}];
+		
+		[self dismissViewControllerAnimated:YES completion:NULL];
+	} else {
+		// @todo show an alert to inform the user to select an address record
+	}
+	return NO;
 }
 
 #pragma mark - UITableViewDataSource
@@ -145,30 +214,36 @@ static NSInteger lastSelectedRow = -1;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 
-	UITableViewCell *cell = sender;
-	NSIndexPath *indexPath = [[segue.sourceViewController tableView] indexPathForCell:cell];
-	MKMapItem *mapItem = nil;
-	
-	if (indexPath) {
-		mapItem = self.history[indexPath.row];
-	} else {
-		indexPath = [[[segue.sourceViewController searchDisplayController] searchResultsTableView] indexPathForCell:cell];
+	if ([sender isKindOfClass:[MKMapItem class]]) {
+		// it has to be the unwind segue
+		MKMapItem *mapItem = sender;
+		self.selectedDestination = mapItem.placemark;
+	} else if ([sender isKindOfClass:[UITableViewCell class]]) {
+		UITableViewCell *cell = sender;
+		NSIndexPath *indexPath = [[segue.sourceViewController tableView] indexPathForCell:cell];
+		MKMapItem *mapItem = nil;
+		
 		if (indexPath) {
-			mapItem = self.searchResponse.mapItems[indexPath.row];
-			//			NSLog(@"lastSelectedRow set now to %d",indexPath.row);
-			lastSelectedRow = indexPath.row;
-			[self.searchDisplayController.searchResultsTableView reloadData];
+			mapItem = self.history[indexPath.row];
+		} else {
+			indexPath = [[[segue.sourceViewController searchDisplayController] searchResultsTableView] indexPathForCell:cell];
+			if (indexPath) {
+				mapItem = self.searchResponse.mapItems[indexPath.row];
+				//			NSLog(@"lastSelectedRow set now to %d",indexPath.row);
+				lastSelectedRow = indexPath.row;
+				[self.searchDisplayController.searchResultsTableView reloadData];
+			}
 		}
-	}
-
-	if ([segue.destinationViewController isKindOfClass:[DestinationDetailViewController class]]) {
-		DestinationDetailViewController *dvc = segue.destinationViewController;
-		dvc.mapItem = mapItem;
-	} else {
-		if (mapItem) {
-			self.selectedDestination = mapItem.placemark;
-			if ([self.history indexOfObject:mapItem] == NSNotFound)
-				[self.history addObject:mapItem];
+		
+		if ([segue.destinationViewController isKindOfClass:[DestinationDetailViewController class]]) {
+			DestinationDetailViewController *dvc = segue.destinationViewController;
+			dvc.mapItem = mapItem;
+		} else { // it has to be the unwind segue
+			if (mapItem) {
+				self.selectedDestination = mapItem.placemark;
+				if ([self.history indexOfObject:mapItem] == NSNotFound)
+					[self.history addObject:mapItem];
+			}
 		}
 	}
 }
