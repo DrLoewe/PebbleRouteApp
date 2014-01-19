@@ -23,6 +23,7 @@
 @property (nonatomic, strong) MKDistanceFormatter *distanceFormatter;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (nonatomic, strong) MKRoute *route;
 @property (nonatomic, strong) PebbleRoute *pebbleRoute; // our model
 @property (nonatomic, weak) MKRouteStep *currentStep; // on our route
 @property (nonatomic, strong) MKPointAnnotation *destinationAnnotation;
@@ -41,13 +42,25 @@
 
 #pragma mark - lazy instantiation of properties
 
+@synthesize destinationAnnotation = _destinationAnnotation;
 - (MKPointAnnotation *)destinationAnnotation
 {
 	if (!_destinationAnnotation) _destinationAnnotation = [[MKPointAnnotation alloc] init];
 	[self.map addAnnotation:_destinationAnnotation];
 	return _destinationAnnotation;
 }
+- (void)setDestinationAnnotation:(MKPointAnnotation *)destinationAnnotation
+{
+	[self.map removeAnnotation:_destinationAnnotation];
+	_destinationAnnotation = destinationAnnotation;
+}
 
+@synthesize routeStepAnnotation = _routeStepAnnotation; // we implement both setter and getter
+- (void)setRouteStepAnnotation:(MKPointAnnotation *)routeStepAnnotation
+{
+	[self.map removeAnnotation:_routeStepAnnotation];
+	_routeStepAnnotation = routeStepAnnotation;
+}
 - (MKPointAnnotation *)routeStepAnnotation
 {
 	if (!_routeStepAnnotation) _routeStepAnnotation = [[MKPointAnnotation alloc] init];
@@ -71,6 +84,15 @@
 {
 	if (!_destinationHistory) _destinationHistory = [[NSMutableArray alloc] init];
 	return _destinationHistory;
+}
+
+#pragma mark - properties
+
+- (void)setRoute:(MKRoute *)route
+{
+	_route = route;
+	self.pebbleRoute.route = route;
+	[self showRoute];
 }
 
 #pragma mark - public API
@@ -108,10 +130,10 @@
 									  delegate:nil
 							 cancelButtonTitle:nil
 							 otherButtonTitles:@"OK", nil] show];
+			self.route = nil;
 		} else {
 			MKRoute *route = [response.routes firstObject];
-			self.pebbleRoute.route = route;
-			[self showRoute:route];
+			self.route = route;
 		}
 		self.refreshButton.enabled = YES;
     }];
@@ -134,48 +156,59 @@
 
 
 
-// show the route after the route was calculated
--(void)showRoute:(MKRoute *)route
+// show the route after the route was changed. This method is called only once while a route is created
+-(void)showRoute
 {
 	if (self.directionsVC.route) {
 		MKRoute *oldRoute = self.directionsVC.route;
 		// clean up references to the old route
 		[self.map removeOverlay:oldRoute.polyline];
 	}
-    self.directionsVC.route = route;
-	self.RouteDistanceLabel.text = [NSString stringWithFormat:@"∑ %@ (%@)",
-									[self.distanceFormatter stringFromDistance:route.distance],
-									[DateTimeFormatter shortStringForTimeInterval:route.expectedTravelTime]
-									];
-	self.RouteDistanceLabel.hidden = NO;
-	[self.map addOverlay:route.polyline level:MKOverlayLevelAboveRoads];
-	self.currentStep = nil;
+	// setup the new route in the directions view controller
+    self.directionsVC.route = self.route;
+	if (self.route) {
+		self.RouteDistanceLabel.text = [NSString stringWithFormat:@"∑ %@ (%@)",
+										[self.distanceFormatter stringFromDistance:self.route.distance],
+										[DateTimeFormatter shortStringForTimeInterval:self.route.expectedTravelTime]
+										];
+		self.RouteDistanceLabel.hidden = NO;
+		[self.map addOverlay:self.route.polyline level:MKOverlayLevelAboveRoads];
+		self.currentStep = nil;
+		self.directionsContainerView.hidden = NO; // it will be set to hidden in setDestination
+	} else {
+		self.RouteDistanceLabel.hidden = YES;
+	}
 	[self updateLocationOnMap];
 	[self.map setRegion:self.region animated:YES];
-	self.directionsContainerView.hidden = NO;
-	
 }
 
+// update the map to reflect the current routing state. This method is called periodically while the user location
+// is updated
 - (void)updateLocationOnMap
 {
 	static MKPolyline *currentRoutePath = nil;
 
-	if (!self.pebbleRoute.route) return;
-	
-	if (self.currentStep != self.pebbleRoute.currentStep) {
-		// currentStep changed
-		self.currentStep = self.pebbleRoute.currentStep;
+	if (self.route) {
+		if (self.currentStep != self.pebbleRoute.currentStep) {
+			// currentStep changed
+			self.currentStep = self.pebbleRoute.currentStep;
+			if (currentRoutePath)
+				[self.map removeOverlay:currentRoutePath];
+			currentRoutePath = [self.pebbleRoute currentRoutePath];
+			[self.map addOverlay:currentRoutePath];
+			[self.routeStepAnnotation setCoordinate:self.pebbleRoute.currentStep.polyline.coordinate];
+		}
+		[self.directionsVC setCurrentStep:self.pebbleRoute.currentStep distance:self.pebbleRoute.remainingDistanceInCurrentStep];
+		self.title = [NSString stringWithFormat:@"%@ ⇢ %@",
+					  [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance],
+					  self.destination.name
+					  ];
+	} else {
+		self.routeStepAnnotation = nil;
+		// no current route
 		if (currentRoutePath)
 			[self.map removeOverlay:currentRoutePath];
-		currentRoutePath = [self.pebbleRoute currentRoutePath];
-		[self.map addOverlay:currentRoutePath];
-		[self.routeStepAnnotation setCoordinate:self.pebbleRoute.currentStep.polyline.coordinate];
 	}
-	[self.directionsVC setCurrentStep:self.pebbleRoute.currentStep distance:self.pebbleRoute.remainingDistanceInCurrentStep];
-	self.title = [NSString stringWithFormat:@"%@ ⇢ %@",
-				  [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance],
-				  self.destination.name
-				  ];
 }
 
 #pragma mark - MKMapViewDelegate protocoll
