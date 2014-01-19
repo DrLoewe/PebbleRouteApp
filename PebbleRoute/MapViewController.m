@@ -17,23 +17,33 @@
 #define SIGNIFICANT_DISTANCE_FOR_UPDATE_UI 25
 
 @interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate, UIGestureRecognizerDelegate>
-@property (weak, nonatomic) IBOutlet MKMapView *map;
-@property (nonatomic, weak) DirectionsViewController *directionsVC;
-@property (weak, nonatomic) IBOutlet UILabel *RouteDistanceLabel;
+
+@property (nonatomic) MKCoordinateRegion region; // current region reflecting the current user location
+@property (nonatomic, strong) MKPlacemark *destination; // selected destination
+@property (nonatomic, strong) NSMutableArray *destinationHistory; // of MKMapItem
 @property (nonatomic, strong) MKDistanceFormatter *distanceFormatter;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
-@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
-@property (nonatomic, strong) MKRoute *route;
-@property (nonatomic, strong) PebbleRoute *pebbleRoute; // our model
+@property (nonatomic, strong) MKRoute *route; // current route (or nil when no route active)
 @property (nonatomic, weak) MKRouteStep *currentStep; // on our route
+
+// map annotations for the final destination and the current (next) route step
 @property (nonatomic, strong) MKPointAnnotation *destinationAnnotation;
 @property (nonatomic, strong) MKPointAnnotation *routeStepAnnotation;
-@property (weak, nonatomic) IBOutlet UIView *directionsContainerView;
+
+@property (nonatomic, strong) PebbleRoute *pebbleRoute; // our model
+@property (nonatomic, weak) DirectionsViewController *directionsVC; // embedded mvc, we dont need a strong pointer
+
+// outlets
+@property (weak, nonatomic) IBOutlet UIView *directionsContainerView; // where the embedded directions mvc resides
+@property (weak, nonatomic) IBOutlet MKMapView *map;
+@property (weak, nonatomic) IBOutlet UILabel *RouteDistanceLabel;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+
 @end
 
 @implementation MapViewController
 
-#pragma mark - Outlets
+#pragma mark - UI actions
 
 // recalculate route button (refresh icon in the top toolbar)
 - (IBAction)recalculateRoute:(id)sender {
@@ -86,7 +96,7 @@
 	return _destinationHistory;
 }
 
-#pragma mark - properties
+#pragma mark - Properties
 
 - (void)setRoute:(MKRoute *)route
 {
@@ -95,7 +105,7 @@
 	[self showRoute];
 }
 
-#pragma mark - public API
+#pragma mark - Public API
 
 - (void)setDestination:(MKPlacemark *)destination
 {
@@ -107,7 +117,7 @@
     [self calculateRoute];
 }
 
-#pragma mark - internal methods
+#pragma mark - Internal methods
 
 - (void)calculateRoute
 {
@@ -136,23 +146,6 @@
 		self.refreshButton.enabled = YES;
     }];
 }
-
-- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
-{
-    MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithOverlay:overlay];
-
-	// draw to full route in light gray, the current remaining route path in blue
-	if (overlay == self.pebbleRoute.route.polyline) {
-		renderer.strokeColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:.4];
-	} else {
-		renderer.strokeColor = [UIColor colorWithRed:.5 green:0 blue:.5 alpha:.4];
-	}
-
-    renderer.lineWidth = 5.0;
-    return renderer;
-}
-
-
 
 // show the route after the route was changed. This method is called only once while a route is created
 -(void)showRoute
@@ -265,7 +258,8 @@
 	}
 }
 
-#pragma mark - segue
+#pragma mark - Segues
+#pragma mark Outgoing
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -278,6 +272,13 @@
 		dvc.delegate = self;
         self.directionsVC = dvc;
     }
+}
+
+#pragma mark Unwind Segues
+
+// FindDestinationViewController will call this action on unwind
+- (IBAction)selectDestination:(UIStoryboardSegue *)segue {
+	self.destination = [[segue sourceViewController] selectedDestination];
 }
 
 #pragma mark - MVC Livecycle
@@ -297,12 +298,6 @@
 	 ];
 }
 
-#pragma unwind segue actions
-
-// FindDestinationViewController will call this action on unwind
-- (IBAction)selectDestination:(UIStoryboardSegue *)segue {
-	self.destination = [[segue sourceViewController] selectedDestination];
-}
 
 #pragma mark - DirectionsViewControllerDelegate protocoll
 
@@ -316,5 +311,23 @@
 	[self.map setRegion:region animated:YES];
 	[self.routeStepAnnotation setCoordinate:location];
 }
+
+#pragma mark - MKOverlay renderer
+
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay
+{
+    MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithOverlay:overlay];
+	
+	// draw to full route in light gray, the current remaining route path in blue
+	if (overlay == self.pebbleRoute.route.polyline) {
+		renderer.strokeColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:.4];
+	} else {
+		renderer.strokeColor = [UIColor colorWithRed:.5 green:0 blue:.5 alpha:.4];
+	}
+	
+    renderer.lineWidth = 5.0;
+    return renderer;
+}
+
 
 @end
