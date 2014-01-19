@@ -101,8 +101,6 @@
 {
 	_destination = destination;
 	self.destinationAnnotation.coordinate = destination.coordinate;
-
-	[self.destinationAnnotation setCoordinate:destination.coordinate];
 	self.destinationAnnotation.title = destination.name;
     self.title = destination.name;
 	self.directionsContainerView.hidden = YES;
