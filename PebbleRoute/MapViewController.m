@@ -129,6 +129,7 @@
 		[self.locationManager startUpdatingLocation];
 	} else {
 		[self.locationManager stopUpdatingLocation];
+		self.locationManager = nil;
 		[self updateLocationOnMap];
 	}
 }
