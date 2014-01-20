@@ -255,6 +255,17 @@
 		notification.soundName = UILocalNotificationDefaultSoundName;
 		notification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
 		[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+	} else if (self.pebbleRoute.currentStep == [self.route.steps lastObject] &&
+			   self.pebbleRoute.remainingDistanceInCurrentStep == 0) {
+		UILocalNotification *notification = [[UILocalNotification alloc] init];
+		notification.alertBody = [NSString stringWithFormat:@"🏁 %@, %@",self.destination.name,
+								  self.pebbleRoute.currentStep.instructions];
+		notification.soundName = UILocalNotificationDefaultSoundName;
+		notification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
+		[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+
+		// clear the current route now, we reached destination
+		self.route = nil;
 	}
 }
 
