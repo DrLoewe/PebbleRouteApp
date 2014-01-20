@@ -10,6 +10,7 @@
 
 @interface PebbleRoute()
 @property (nonatomic, weak, readwrite) MKRouteStep *currentStep;
+@property (nonatomic, weak, readwrite) MKRouteStep *lastStep;
 @property (nonatomic, readwrite) float distance;
 @property (nonatomic, readwrite) float remainingDistanceInCurrentStep;
 @end
@@ -62,7 +63,7 @@
     MKMapPoint origin = MKMapPointForCoordinate(self.currentUserLocation.coordinate);
     float minDistance = MAXFLOAT;
     MKMapPoint pointOnPath;
-    MKRouteStep *currentStep;
+    MKRouteStep *currentStep, *lastStep;
 	NSUInteger pointIndex;
 
     for (MKRouteStep *routeStep in self.route.steps) {
@@ -71,7 +72,12 @@
             float dx = point.x - origin.x;
             float dy = point.y - origin.y;
             float distance = dx * dx + dy * dy;
-            if (distance <= minDistance) {
+
+            if (distance < minDistance) {
+				lastStep = routeStep;
+			}
+
+			if (distance <= minDistance) {
 				pointIndex = i;
                 minDistance = distance;
                 pointOnPath = point;
@@ -81,7 +87,8 @@
     }
 
     self.currentStep = currentStep;
-
+	self.lastStep = lastStep;
+	
 	if (self.currentStep.polyline.pointCount < 2) {
 		self.remainingDistanceInCurrentStep = 0;
 	} else {

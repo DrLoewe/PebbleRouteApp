@@ -59,6 +59,15 @@
 	if (!_locationManager) {
 		_locationManager = [[CLLocationManager alloc] init];
 		_locationManager.delegate = self;
+
+		/*
+		 CLActivityTypeFitness
+		 The location manager is being used to track any pedestrian-related activity. This activity might cause location updates
+		 to be paused only when the user does not move a significant distance over a period of time.
+		 Available in iOS 6.0 and later.
+		 */
+
+		_locationManager.activityType = CLActivityTypeFitness;
 	}
 	return _locationManager;
 }
@@ -120,13 +129,8 @@
 		[self.locationManager startUpdatingLocation];
 	} else {
 		[self.locationManager stopUpdatingLocation];
+		[self updateLocationOnMap];
 	}
-}
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-	CLLocation *currentLocation = [locations lastObject];
-	NSLog(@"current location %@", currentLocation);
 }
 
 #pragma mark - Public API
@@ -231,6 +235,28 @@
 	}
 }
 
+#define MIN_STEP_DISTANCE_FOR_ALERT 80
+
+- (void)updateLocationInBackground
+{
+	static __weak MKRouteStep *oldRouteStep = nil;
+	
+//	NSLog(@"distance in current step: %f, total distance of current step: %f",
+//		  self.pebbleRoute.remainingDistanceInCurrentStep,
+//		  self.pebbleRoute.currentStep.distance);
+
+	if (self.pebbleRoute.lastStep.distance >= MIN_STEP_DISTANCE_FOR_ALERT &&
+		self.pebbleRoute.currentStep != self.pebbleRoute.lastStep &&
+		self.pebbleRoute.lastStep != oldRouteStep) {
+		oldRouteStep = self.pebbleRoute.lastStep;
+		UILocalNotification *notification = [[UILocalNotification alloc] init];
+		notification.alertBody = self.pebbleRoute.lastStep.instructions;
+		notification.soundName = UILocalNotificationDefaultSoundName;
+		notification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
+		[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+	}
+}
+
 #pragma mark - MKMapViewDelegate protocoll
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
@@ -258,6 +284,7 @@
 // user moved and his position got updated
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
+	//	NSLog(@"MKMapView: current location %@", userLocation.location);
 	//	NSLog(@"didUpdateUserLocation to lat=%f&lon=%f",userLocation.coordinate.latitude, userLocation.coordinate.longitude);
 
 	MKCoordinateRegion region;
@@ -270,16 +297,37 @@
 		self.region.center.latitude == 0.0)) {
 		[self.map setRegion:region animated:YES];
 	}
-	
 	self.region = region;
+
+	if (!self.locationManager) { // no location manager available
+		[self processUpdatedUserLocation:userLocation.location];
+	}
+}
+
+#pragma mark - CLLocationManagerDelegate Methods
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+	CLLocation *currentLocation = [locations lastObject];
+	//	NSLog(@"CLLocationManager: current location %@", currentLocation);
+	[self processUpdatedUserLocation:currentLocation];
+}
+
+- (void)processUpdatedUserLocation:(CLLocation *)location
+{
 	// perform further updates only if the user location has changed significantly
 	static CLLocation *lastLocation = nil;
-	if (!lastLocation || [userLocation.location distanceFromLocation:lastLocation] > SIGNIFICANT_DISTANCE_FOR_UPDATE_UI) {
-		lastLocation = userLocation.location;
+	if (!lastLocation || [location distanceFromLocation:lastLocation] > SIGNIFICANT_DISTANCE_FOR_UPDATE_UI) {
+		lastLocation = location;
 		//		NSLog(@"location updated");
 		// update the current user location in our model
-		self.pebbleRoute.currentUserLocation = userLocation.location;
-		[self updateLocationOnMap];
+		self.pebbleRoute.currentUserLocation = location;
+		if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+			[self updateLocationOnMap];
+		} else {
+			// running in background
+			[self updateLocationInBackground];
+		}
 	}
 }
 
