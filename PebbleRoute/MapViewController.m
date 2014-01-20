@@ -16,7 +16,8 @@
 // treshold for location change delta to update UI stuff in m
 #define SIGNIFICANT_DISTANCE_FOR_UPDATE_UI 25
 
-@interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate, UIGestureRecognizerDelegate>
+@interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate, UIGestureRecognizerDelegate,
+									CLLocationManagerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) MKCoordinateRegion region; // current region reflecting the current user location
 @property (nonatomic, strong) MKPlacemark *destination; // selected destination
@@ -39,6 +40,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 
+@property (nonatomic, strong) CLLocationManager *locationManager;
 @end
 
 @implementation MapViewController
@@ -51,6 +53,15 @@
 }
 
 #pragma mark - lazy instantiation of properties
+
+- (CLLocationManager *)locationManager
+{
+	if (!_locationManager) {
+		_locationManager = [[CLLocationManager alloc] init];
+		_locationManager.delegate = self;
+	}
+	return _locationManager;
+}
 
 @synthesize destinationAnnotation = _destinationAnnotation;
 - (MKPointAnnotation *)destinationAnnotation
@@ -103,6 +114,19 @@
 	_route = route;
 	self.pebbleRoute.route = route;
 	[self showRoute];
+
+	if (route) {
+		self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+		[self.locationManager startUpdatingLocation];
+	} else {
+		[self.locationManager stopUpdatingLocation];
+	}
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+	CLLocation *currentLocation = [locations lastObject];
+	NSLog(@"current location %@", currentLocation);
 }
 
 #pragma mark - Public API
@@ -168,6 +192,10 @@
 		self.directionsContainerView.hidden = NO; // it will be set to hidden in setDestination
 	} else {
 		self.RouteDistanceLabel.hidden = YES;
+		self.directionsContainerView.hidden = YES;
+		self.routeStepAnnotation = nil;
+		self.destinationAnnotation = nil;
+		self.title = @"No active route";
 	}
 	[self updateLocationOnMap];
 	[self.map setRegion:self.region animated:YES];
@@ -195,10 +223,11 @@
 					  self.destination.name
 					  ];
 	} else {
-		self.routeStepAnnotation = nil;
 		// no current route
-		if (currentRoutePath)
+		if (currentRoutePath) {
 			[self.map removeOverlay:currentRoutePath];
+			currentRoutePath = nil;
+		}
 	}
 }
 
@@ -240,10 +269,6 @@
 		(self.region.center.longitude == 0.0 &&
 		self.region.center.latitude == 0.0)) {
 		[self.map setRegion:region animated:YES];
-	}
-	
-	if (!self.destination) {
-		self.title = userLocation.title;
 	}
 	
 	self.region = region;
@@ -291,13 +316,40 @@
 	self.map.delegate = self;
 	MKUserTrackingBarButtonItem *trackingButton = [[MKUserTrackingBarButtonItem alloc] initWithMapView:self.map];
 	[self.toolbar setItems:@[
+							 trackingButton,
 							 [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
 																		   target:nil
 																		   action:nil],
-							 trackingButton] animated:YES
+							 [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+																		   target:nil
+																		   action:@selector(toolbarAction)],
+							 ] animated:YES
 	 ];
 }
 
+- (void)toolbarAction
+{
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+															 delegate:self
+													cancelButtonTitle:@"Cancel"
+											   destructiveButtonTitle:@"Stop navigation"
+													otherButtonTitles:@"Recalculate Route",
+								  nil];
+	[actionSheet showFromToolbar:self.toolbar];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	switch (buttonIndex) {
+		case 0:
+			self.route = nil;
+			[self showRoute];
+			break;
+			
+		default:
+			break;
+	}
+}
 
 #pragma mark - DirectionsViewControllerDelegate protocoll
 

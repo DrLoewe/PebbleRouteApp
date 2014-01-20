@@ -251,6 +251,13 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Remus Lazar";
 				TargetAttributes = {
+					D83D02FF1885782000EDC2BE = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
 					D83D03201885782000EDC2BE = {
 						TestTargetID = D83D02FF1885782000EDC2BE;
 					};
