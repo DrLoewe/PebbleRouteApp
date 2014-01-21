@@ -195,15 +195,16 @@
 		[self.map addOverlay:self.route.polyline level:MKOverlayLevelAboveRoads];
 		self.currentStep = nil;
 		self.directionsContainerView.hidden = NO; // it will be set to hidden in setDestination
+        [self.map showAnnotations:self.map.annotations animated:YES];
 	} else {
 		self.RouteDistanceLabel.hidden = YES;
 		self.directionsContainerView.hidden = YES;
 		self.routeStepAnnotation = nil;
 		self.destinationAnnotation = nil;
 		self.title = @"No active route";
+        [self.map setRegion:self.region animated:YES];
 	}
 	[self updateLocationOnMap];
-	[self.map setRegion:self.region animated:YES];
 }
 
 // update the map to reflect the current routing state. This method is called periodically while the user location
@@ -298,7 +299,7 @@
 {
 	//	NSLog(@"MKMapView: current location %@", userLocation.location);
 	//	NSLog(@"didUpdateUserLocation to lat=%f&lon=%f",userLocation.coordinate.latitude, userLocation.coordinate.longitude);
-
+    
 	MKCoordinateRegion region;
 	region.center = userLocation.coordinate;
 	region.span.latitudeDelta = .1;
@@ -398,12 +399,18 @@
 	[actionSheet showFromToolbar:self.toolbar];
 }
 
+#pragma mark - action sheet actions
+
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
 	switch (buttonIndex) {
 		case 0:
 			self.route = nil;
 			[self showRoute];
+			break;
+
+		case 1:
+			[self calculateRoute];
 			break;
 			
 		default:
