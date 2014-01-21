@@ -12,12 +12,16 @@
 #import "DirectionsViewControllerDelegate.h"
 #import "PebbleRoute.h"
 #import "DateTimeFormatter.h"
+#import <PebbleKit/PebbleKit.h>
+
+// rl_route app uuid here
+#define PEBBLE_APP_UUID @"cf59151f-4dff-4221-a109-7dde3377545c"
 
 // treshold for location change delta to update UI stuff in m
 #define SIGNIFICANT_DISTANCE_FOR_UPDATE_UI 25
 
 @interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate, UIGestureRecognizerDelegate,
-									CLLocationManagerDelegate, UIActionSheetDelegate>
+									CLLocationManagerDelegate, UIActionSheetDelegate, PBPebbleCentralDelegate>
 
 @property (nonatomic) MKCoordinateRegion region; // current region reflecting the current user location
 @property (nonatomic, strong) MKPlacemark *destination; // selected destination
@@ -41,6 +45,11 @@
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
+
+@property (nonatomic, strong) PBWatch *pebbleWatch;
+
+@property (nonatomic, strong) UIBarButtonItem *pebbleWatchButtonItem;
+
 @end
 
 @implementation MapViewController
@@ -53,6 +62,17 @@
 }
 
 #pragma mark - lazy instantiation of properties
+
+- (UIBarButtonItem *)pebbleWatchButtonItem
+{
+    if (!_pebbleWatchButtonItem) {
+        _pebbleWatchButtonItem =
+        [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Pebble Watch Bar Icon.png"]
+                                         style:UIBarButtonItemStylePlain target:nil action:NULL];
+        _pebbleWatchButtonItem.enabled = NO;
+    }
+    return _pebbleWatchButtonItem;
+}
 
 - (CLLocationManager *)locationManager
 {
@@ -127,6 +147,7 @@
 	if (route) {
 		self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
 		[self.locationManager startUpdatingLocation];
+        if (self.pebbleWatch) [self pebbleSendRouteStep:0];
 	} else {
 		[self.locationManager stopUpdatingLocation];
 		self.locationManager = nil;
@@ -372,6 +393,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
 	// Do any additional setup after loading the view.
 	self.map.showsUserLocation = YES;
 	self.map.delegate = self;
@@ -381,11 +403,15 @@
 							 [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
 																		   target:nil
 																		   action:nil],
+                             self.pebbleWatchButtonItem,
 							 [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
 																		   target:nil
 																		   action:@selector(toolbarAction)],
 							 ] animated:YES
 	 ];
+
+    // init the connected pebble watch now
+    [self initPebbleWatch];
 }
 
 - (void)toolbarAction
@@ -448,5 +474,105 @@
     return renderer;
 }
 
+#pragma mark - Pebble Watch, AppMessage and Delegate Methods
+
+- (void)setPebbleWatch:(PBWatch *)pebbleWatch
+{
+    _pebbleWatch = pebbleWatch;
+    if (pebbleWatch) {
+//        NSLog(@"pebble available, register the receiving handler");
+        [pebbleWatch appMessagesAddReceiveUpdateHandler:^BOOL(PBWatch *watch, NSDictionary *update) {
+            NSLog(@"Received message: %@", update);
+//            [self pebbleSendRouteStep:0];
+            return YES;
+        }];
+        self.pebbleWatchButtonItem.enabled = YES;
+    } else {
+        self.pebbleWatchButtonItem.enabled = NO;
+    }
+}
+
+- (void)initPebbleWatch
+{
+    uuid_t myAppUUIDbytes;
+    NSUUID *myAppUUID = [[NSUUID alloc] initWithUUIDString:PEBBLE_APP_UUID];
+    [myAppUUID getUUIDBytes:myAppUUIDbytes];
+    [[PBPebbleCentral defaultCentral] setAppUUID:[NSData dataWithBytes:myAppUUIDbytes length:16]];
+
+    self.pebbleWatch = [[PBPebbleCentral defaultCentral] lastConnectedWatch];
+    [[PBPebbleCentral defaultCentral] setDelegate:self];
+    NSLog(@"Last connected watch: %@", self.pebbleWatch);
+
+    if (self.pebbleWatch) {
+        [self pebbleLaunchApp];
+    }
+}
+
+-(void)pebbleLaunchApp
+{
+    [self.pebbleWatch appMessagesLaunch:^(PBWatch *watch, NSError *error) {
+        if (!error) {
+            NSLog(@"Successfully launched app.");
+        }
+        else {
+            NSLog(@"Error launching app - Error: %@", error);
+        }
+    }];
+}
+
+- (void)pebbleCentral:(PBPebbleCentral *)central watchDidConnect:(PBWatch *)watch isNew:(BOOL)isNew
+{
+    NSLog(@"Pebble connected: %@", [watch name]);
+    self.pebbleWatch = watch;
+    [self pebbleLaunchApp];
+}
+
+- (void)pebbleCentral:(PBPebbleCentral*)central watchDidDisconnect:(PBWatch*)watch
+{
+    NSLog(@"Pebble disconnected: %@", [watch name]);
+    
+    if (self.pebbleWatch == watch || [watch isEqual:self.pebbleWatch]) {
+        self.pebbleWatch = nil;
+    }
+}
+
+- (void)pebbleSendRouteStep:(NSUInteger)routeStepIndex
+{
+    if (!self.route) return; // no route, stop here
+    if (routeStepIndex >= self.route.steps.count) return; // no more steps, break
+    MKRouteStep *routeStep = self.route.steps[routeStepIndex];
+    
+    NSDictionary *appMessage = @{
+                                 @(0): [NSNumber numberWithInt8:routeStepIndex],
+                                 @(1): [self.distanceFormatter stringFromDistance:routeStep.distance],
+                                 @(2): routeStep.instructions
+                                 };
+    
+    [self.pebbleWatch appMessagesPushUpdate:appMessage onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+        if (!error) {
+            NSLog(@"Successfully sent message.");
+            [self pebbleSendRouteStep:routeStepIndex+1];
+        }
+        else {
+            NSLog(@"Error sending message: %@", error);
+        }
+    }];
+}
+
+- (void)sendAppMessageToPebble
+{
+    NSString *routeName = self.route.name ? self.route.name : @"";
+    NSDictionary *update = @{ @(0):[NSNumber numberWithUint8:42],
+                              @(1):routeName };
+
+    [self.pebbleWatch appMessagesPushUpdate:update onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+        if (!error) {
+            NSLog(@"Successfully sent message.");
+        }
+        else {
+            NSLog(@"Error sending message: %@", error);
+        }
+    }];
+}
 
 @end
