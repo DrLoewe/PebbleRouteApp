@@ -47,7 +47,7 @@
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
 @property (nonatomic, strong) PBWatch *pebbleWatch;
-
+@property (nonatomic) BOOL pebbleWatchStateNormal;
 @property (nonatomic, strong) UIBarButtonItem *pebbleWatchButtonItem;
 
 @end
@@ -356,11 +356,17 @@
 		//		NSLog(@"location updated");
 		// update the current user location in our model
 		self.pebbleRoute.currentUserLocation = location;
+
+		if (self.pebbleWatch) {
+			[self pebbleUpdateLocation];
+		}
+
 		if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
 			[self updateLocationOnMap];
 		} else {
 			// running in background
-			[self updateLocationInBackground];
+			if (!self.pebbleWatch || !self.pebbleWatchStateNormal)
+				[self updateLocationInBackground];
 		}
 	}
 }
@@ -487,6 +493,7 @@
             return YES;
         }];
         self.pebbleWatchButtonItem.enabled = YES;
+		self.pebbleWatchStateNormal = YES;
     } else {
         self.pebbleWatchButtonItem.enabled = NO;
     }
@@ -536,6 +543,26 @@
     }
 }
 
+- (void)pebbleUpdateLocation {
+	int index = [self.route.steps indexOfObject:self.pebbleRoute.currentStep];
+    NSDictionary *appMessage = @{
+                                 @(3): [NSNumber numberWithInt8:index],
+                                 @(4): [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance],
+                                 };
+    
+    [self.pebbleWatch appMessagesPushUpdate:appMessage onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+        if (!error) {
+			NSLog(@"Successfully sent message %@", appMessage);
+			
+        }
+        else {
+            NSLog(@"Error sending message: %@", error);
+        }
+		self.pebbleWatchStateNormal = !error;
+    }];
+	
+}
+
 - (void)pebbleSendRouteStep:(NSUInteger)routeStepIndex
 {
     if (!self.route) return; // no route, stop here
@@ -550,27 +577,12 @@
     
     [self.pebbleWatch appMessagesPushUpdate:appMessage onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
         if (!error) {
-            NSLog(@"Successfully sent message.");
+			//            NSLog(@"Successfully sent message.");
             [self pebbleSendRouteStep:routeStepIndex+1];
         }
         else {
             NSLog(@"Error sending message: %@", error);
-        }
-    }];
-}
-
-- (void)sendAppMessageToPebble
-{
-    NSString *routeName = self.route.name ? self.route.name : @"";
-    NSDictionary *update = @{ @(0):[NSNumber numberWithUint8:42],
-                              @(1):routeName };
-
-    [self.pebbleWatch appMessagesPushUpdate:update onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
-        if (!error) {
-            NSLog(@"Successfully sent message.");
-        }
-        else {
-            NSLog(@"Error sending message: %@", error);
+			self.pebbleWatchStateNormal = !error;
         }
     }];
 }
