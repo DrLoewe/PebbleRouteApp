@@ -13,6 +13,7 @@
 #import "PebbleRoute.h"
 #import "DateTimeFormatter.h"
 #import <PebbleKit/PebbleKit.h>
+#import "appmessage.h"
 
 // rl_route app uuid here
 #define PEBBLE_APP_UUID @"cf59151f-4dff-4221-a109-7dde3377545c"
@@ -298,7 +299,7 @@
 	static NSString *pinViewIdentifier = @"pinView";
 	
 	if (annotation == self.map.userLocation) return nil;
-	
+
 	MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:pinViewIdentifier];
 	if (!pinView) {
 		pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation
@@ -486,9 +487,11 @@
 {
     _pebbleWatch = pebbleWatch;
     if (pebbleWatch) {
-//        NSLog(@"pebble available, register the receiving handler");
         [pebbleWatch appMessagesAddReceiveUpdateHandler:^BOOL(PBWatch *watch, NSDictionary *update) {
-            NSLog(@"Received message: %@", update);
+//            NSLog(@"Received message: %@", update);
+            if ([update objectForKey:@(APPMESSAGE_REQUEST_REROUTE)]) {
+                [self calculateRoute];
+            }
 //            [self pebbleSendRouteStep:0];
             return YES;
         }];
@@ -544,15 +547,28 @@
 }
 
 - (void)pebbleUpdateLocation {
+    BOOL alert = NO;
+
+    // do we need to alert the user?
+    static __weak MKRouteStep *oldRouteStep = nil;
+
+    if (self.pebbleRoute.currentStep != self.pebbleRoute.lastStep &&
+		self.pebbleRoute.lastStep != oldRouteStep) {
+		oldRouteStep = self.pebbleRoute.lastStep;
+        alert = YES;
+    }
+    
 	NSUInteger index = [self.route.steps indexOfObject:self.pebbleRoute.currentStep];
     NSDictionary *appMessage = @{
-                                 @(3): [NSNumber numberWithInt8:index],
-                                 @(4): [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance],
+                                 @(APPMESSAGE_KEY_UPDATE_INDEX): [NSNumber numberWithInt8:index],
+                                 @(APPMESSAGE_KEY_UPDATE_DISTANCE): [self.distanceFormatter stringFromDistance:self.pebbleRoute.remainingDistanceInCurrentStep],
+                                 @(APPMESSAGE_KEY_UPDATE_TOTAL_DISTANCE): [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance],
+                                 @(APPMESSAGE_KEY_UPDATE_ALERT): [NSNumber numberWithInt8:alert]
                                  };
     
     [self.pebbleWatch appMessagesPushUpdate:appMessage onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
         if (!error) {
-			NSLog(@"Successfully sent message %@", appMessage);
+//			NSLog(@"Successfully sent message %@", appMessage);
 			
         }
         else {
@@ -566,13 +582,16 @@
 - (void)pebbleSendRouteStep:(NSUInteger)routeStepIndex
 {
     if (!self.route) return; // no route, stop here
-    if (routeStepIndex >= self.route.steps.count) return; // no more steps, break
+    if (routeStepIndex >= self.route.steps.count) { // no more steps, call pebbleUpdateLocation() and return
+        [self pebbleUpdateLocation];
+        return;
+    }
     MKRouteStep *routeStep = self.route.steps[routeStepIndex];
     
     NSDictionary *appMessage = @{
-                                 @(0): [NSNumber numberWithInt8:routeStepIndex],
-                                 @(1): [self.distanceFormatter stringFromDistance:routeStep.distance],
-                                 @(2): routeStep.instructions
+                                 @(APPMESSAGE_KEY_ROUTESTEP_INDEX): [NSNumber numberWithInt8:routeStepIndex],
+                                 @(APPMESSAGE_KEY_ROUTESTEP_DISTANCE): [self.distanceFormatter stringFromDistance:routeStep.distance],
+                                 @(APPMESSAGE_KEY_ROUTESTEP_INSTRUCTIONS): routeStep.instructions
                                  };
     
     [self.pebbleWatch appMessagesPushUpdate:appMessage onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
