@@ -544,7 +544,7 @@
 }
 
 - (void)pebbleUpdateLocation {
-	int index = [self.route.steps indexOfObject:self.pebbleRoute.currentStep];
+	NSUInteger index = [self.route.steps indexOfObject:self.pebbleRoute.currentStep];
     NSDictionary *appMessage = @{
                                  @(3): [NSNumber numberWithInt8:index],
                                  @(4): [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance],
