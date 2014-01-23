@@ -23,7 +23,7 @@
 #define MIN_DISTANCE_IN_CURRENT_STEP_TO_ALERT_USER 10
 
 @interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate, UIGestureRecognizerDelegate,
-									CLLocationManagerDelegate, UIActionSheetDelegate, PBPebbleCentralDelegate>
+									CLLocationManagerDelegate, UIActionSheetDelegate, PBPebbleCentralDelegate, PBWatchDelegate>
 
 @property (nonatomic) MKCoordinateRegion region; // current region reflecting the current user location
 @property (nonatomic, strong) MKPlacemark *destination; // selected destination
@@ -149,11 +149,20 @@
 	if (route) {
 		self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
 		[self.locationManager startUpdatingLocation];
-        if (self.pebbleWatch) [self pebbleSendRouteStep:0];
+
+        if (self.pebbleWatch) {
+            [self pebbleSendRouteStep:0];
+        // else init the connected pebble watch now and start the companion app
+        // the companion app will get the route later when it is ready
+        } else {
+            [self initPebbleWatch];
+        }
+        
 	} else {
 		[self.locationManager stopUpdatingLocation];
 		self.locationManager = nil;
 		[self updateLocationOnMap];
+        [self pebbleKillApp];
 	}
 }
 
@@ -409,9 +418,6 @@
 																		   action:@selector(toolbarAction)],
 							 ] animated:YES
 	 ];
-
-    // init the connected pebble watch now
-    [self initPebbleWatch];
 }
 
 - (void)toolbarAction
@@ -484,16 +490,24 @@
 //            NSLog(@"Received message: %@", update);
             if ([update objectForKey:@(APPMESSAGE_REQUEST_REROUTE)]) {
                 [self calculateRoute];
+            } else if ([update objectForKey:@(APPMESSAGE_REQUEST_GET_ROUTE)]) {
+                [self pebbleSendRouteStep:0];
             }
-//            [self pebbleSendRouteStep:0];
             return YES;
         }];
+
+        // monitor the watchapp state (running/not running)
+        [pebbleWatch appMessagesAddAppLifecycleUpdateHandler:^(PBWatch *watch, NSUUID *uuid, PBAppState newAppState) {
+            NSLog(@"appMessage new appState=%d", newAppState);
+        }];
+
         self.pebbleWatchButtonItem.enabled = YES;
 		self.pebbleWatchStateNormal = YES;
     } else {
         self.pebbleWatchButtonItem.enabled = NO;
     }
 }
+
 
 - (void)initPebbleWatch
 {
@@ -509,6 +523,11 @@
     if (self.pebbleWatch) {
         [self pebbleLaunchApp];
     }
+}
+
+- (void)pebbleKillApp
+{
+    [self.pebbleWatch appMessagesKill:NULL]; // we dont care about the results here
 }
 
 -(void)pebbleLaunchApp
@@ -554,7 +573,8 @@
     NSDictionary *appMessage = @{
                                  @(APPMESSAGE_KEY_UPDATE_INDEX): [NSNumber numberWithInt8:index],
                                  @(APPMESSAGE_KEY_UPDATE_DISTANCE): [self.distanceFormatter stringFromDistance:self.pebbleRoute.remainingDistanceInCurrentStep],
-                                 @(APPMESSAGE_KEY_UPDATE_TOTAL_DISTANCE): [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance],
+                                 @(APPMESSAGE_KEY_UPDATE_TOTAL_DISTANCE): [NSString stringWithFormat:@"Remaining: %@",
+                                     [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance]],
                                  @(APPMESSAGE_KEY_UPDATE_ALERT): [NSNumber numberWithInt8:alert ? 1 : 0]
                                  };
     
