@@ -63,7 +63,7 @@
     float minDistance = MAXFLOAT;
 //    MKMapPoint pointOnPath;
     MKRouteStep *currentStep;
-//	NSUInteger pointIndex;
+	NSUInteger pointIndex;
 
     for (MKRouteStep *routeStep in self.route.steps) {
         for (NSUInteger i=0; i<routeStep.polyline.pointCount; i++) {
@@ -75,7 +75,9 @@
             // by using < we get only the first point having a minimum distance to
             // the user location
             if (distance < minDistance) {
-//				pointIndex = i;
+				// because minDistance is initialized with MAXFLOAT, this condition will
+				// succeed at least once
+				pointIndex = i;
                 minDistance = distance;
 //                pointOnPath = point;
                 currentStep = routeStep;
@@ -94,9 +96,9 @@
 			float distance = [PebbleRoute distanceFrom:self.currentStep.polyline.points[i]
 													to:self.currentStep.polyline.points[i+1]];
 			totalDistance += distance;
-//			if (i >= pointIndex) {
-//				distanceFromPointToEnd += distance;
-//			}
+			if (i >= pointIndex) {
+				distanceFromPointToEnd += distance;
+			}
 		}
 		self.remainingDistanceInCurrentStep = distanceFromPointToEnd / totalDistance * self.currentStep.distance;
 		//		NSLog(@"remaining distance in current step: %.1f", self.remainingDistanceInCurrentStep);
