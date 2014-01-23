@@ -19,7 +19,8 @@
 #define PEBBLE_APP_UUID @"cf59151f-4dff-4221-a109-7dde3377545c"
 
 // treshold for location change delta to update UI stuff in m
-#define SIGNIFICANT_DISTANCE_FOR_UPDATE_UI 25
+#define SIGNIFICANT_DISTANCE_FOR_UPDATE_UI 10
+#define MIN_DISTANCE_IN_CURRENT_STEP_TO_ALERT_USER 10
 
 @interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate, UIGestureRecognizerDelegate,
 									CLLocationManagerDelegate, UIActionSheetDelegate, PBPebbleCentralDelegate>
@@ -259,22 +260,14 @@
 	}
 }
 
-#define MIN_STEP_DISTANCE_FOR_ALERT 80
-
 - (void)updateLocationInBackground
 {
-	static __weak MKRouteStep *oldRouteStep = nil;
-	
-//	NSLog(@"distance in current step: %f, total distance of current step: %f",
-//		  self.pebbleRoute.remainingDistanceInCurrentStep,
-//		  self.pebbleRoute.currentStep.distance);
-
-	if (self.pebbleRoute.lastStep.distance >= MIN_STEP_DISTANCE_FOR_ALERT &&
-		self.pebbleRoute.currentStep != self.pebbleRoute.lastStep &&
-		self.pebbleRoute.lastStep != oldRouteStep) {
-		oldRouteStep = self.pebbleRoute.lastStep;
+	static __weak MKRouteStep *routeStepIsAlreadyNotified = nil;
+	if (self.pebbleRoute.currentStep.distance >= MIN_DISTANCE_IN_CURRENT_STEP_TO_ALERT_USER &&
+		self.pebbleRoute.currentStep != routeStepIsAlreadyNotified) {
+		routeStepIsAlreadyNotified = self.pebbleRoute.currentStep;
 		UILocalNotification *notification = [[UILocalNotification alloc] init];
-		notification.alertBody = self.pebbleRoute.lastStep.instructions;
+		notification.alertBody = self.pebbleRoute.currentStep.instructions;
 		notification.soundName = UILocalNotificationDefaultSoundName;
 		notification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
 		[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
@@ -550,11 +543,10 @@
     BOOL alert = NO;
 
     // do we need to alert the user?
-    static __weak MKRouteStep *oldRouteStep = nil;
-
-    if (self.pebbleRoute.currentStep != self.pebbleRoute.lastStep &&
-		self.pebbleRoute.lastStep != oldRouteStep) {
-		oldRouteStep = self.pebbleRoute.lastStep;
+    static __weak MKRouteStep *routeStepAlreadyNotified = nil;
+    if (self.pebbleRoute.currentStep != routeStepAlreadyNotified &&
+        self.pebbleRoute.currentStep.distance < MIN_DISTANCE_IN_CURRENT_STEP_TO_ALERT_USER) {
+		routeStepAlreadyNotified = self.pebbleRoute.currentStep;
         alert = YES;
     }
     
@@ -563,7 +555,7 @@
                                  @(APPMESSAGE_KEY_UPDATE_INDEX): [NSNumber numberWithInt8:index],
                                  @(APPMESSAGE_KEY_UPDATE_DISTANCE): [self.distanceFormatter stringFromDistance:self.pebbleRoute.remainingDistanceInCurrentStep],
                                  @(APPMESSAGE_KEY_UPDATE_TOTAL_DISTANCE): [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance],
-                                 @(APPMESSAGE_KEY_UPDATE_ALERT): [NSNumber numberWithInt8:alert]
+                                 @(APPMESSAGE_KEY_UPDATE_ALERT): [NSNumber numberWithInt8:alert ? 1 : 0]
                                  };
     
     [self.pebbleWatch appMessagesPushUpdate:appMessage onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {

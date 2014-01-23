@@ -10,7 +10,6 @@
 
 @interface PebbleRoute()
 @property (nonatomic, weak, readwrite) MKRouteStep *currentStep;
-@property (nonatomic, weak, readwrite) MKRouteStep *lastStep;
 @property (nonatomic, readwrite) float distance;
 @property (nonatomic, readwrite) float remainingDistanceInCurrentStep;
 @end
@@ -62,9 +61,9 @@
 {
     MKMapPoint origin = MKMapPointForCoordinate(self.currentUserLocation.coordinate);
     float minDistance = MAXFLOAT;
-    MKMapPoint pointOnPath;
-    MKRouteStep *currentStep, *lastStep;
-	NSUInteger pointIndex;
+//    MKMapPoint pointOnPath;
+    MKRouteStep *currentStep;
+//	NSUInteger pointIndex;
 
     for (MKRouteStep *routeStep in self.route.steps) {
         for (NSUInteger i=0; i<routeStep.polyline.pointCount; i++) {
@@ -73,21 +72,18 @@
             float dy = point.y - origin.y;
             float distance = dx * dx + dy * dy;
 
+            // by using < we get only the first point having a minimum distance to
+            // the user location
             if (distance < minDistance) {
-				lastStep = routeStep;
-			}
-
-			if (distance <= minDistance) {
-				pointIndex = i;
+//				pointIndex = i;
                 minDistance = distance;
-                pointOnPath = point;
+//                pointOnPath = point;
                 currentStep = routeStep;
             }
         }
     }
 
     self.currentStep = currentStep;
-	self.lastStep = lastStep;
 	
 	if (self.currentStep.polyline.pointCount < 2) {
 		self.remainingDistanceInCurrentStep = 0;
@@ -98,9 +94,9 @@
 			float distance = [PebbleRoute distanceFrom:self.currentStep.polyline.points[i]
 													to:self.currentStep.polyline.points[i+1]];
 			totalDistance += distance;
-			if (i >= pointIndex) {
-				distanceFromPointToEnd += distance;
-			}
+//			if (i >= pointIndex) {
+//				distanceFromPointToEnd += distance;
+//			}
 		}
 		self.remainingDistanceInCurrentStep = distanceFromPointToEnd / totalDistance * self.currentStep.distance;
 		//		NSLog(@"remaining distance in current step: %.1f", self.remainingDistanceInCurrentStep);

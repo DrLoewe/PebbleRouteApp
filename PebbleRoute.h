@@ -13,7 +13,6 @@
 @property (nonatomic, strong) MKRoute *route;
 @property (nonatomic, strong) CLLocation *currentUserLocation;
 @property (nonatomic, weak, readonly) MKRouteStep *currentStep;
-@property (nonatomic, weak, readonly) MKRouteStep *lastStep;
 @property (nonatomic, readonly) float distance; // from current location to final destination
 @property (nonatomic, readonly) float remainingDistanceInCurrentStep;
 - (MKPolyline *)currentRoutePath; // get the current remaining route(path) as Polyline
