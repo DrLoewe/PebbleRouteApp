@@ -148,7 +148,7 @@
 	if (route) {
 		self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
 		[self.locationManager startUpdatingLocation];
-		NSLog(@"New route %@ with %d steps.", route.name, route.steps.count);
+		NSLog(@"New route %@ with %lu steps.", route.name, (unsigned long)route.steps.count);
 
         if (self.pebbleWatch) {
             [self pebbleSendRouteStep:0];
