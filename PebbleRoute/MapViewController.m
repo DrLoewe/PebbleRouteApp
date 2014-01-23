@@ -49,7 +49,6 @@
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
 @property (nonatomic, strong) PBWatch *pebbleWatch;
-@property (nonatomic) BOOL pebbleWatchStateNormal;
 @property (nonatomic, strong) UIBarButtonItem *pebbleWatchButtonItem;
 @property (nonatomic) BOOL pebbleWatchIsReady;
 @end
@@ -149,6 +148,7 @@
 	if (route) {
 		self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
 		[self.locationManager startUpdatingLocation];
+		NSLog(@"New route %@ with %d steps.", route.name, route.steps.count);
 
         if (self.pebbleWatch) {
             [self pebbleSendRouteStep:0];
@@ -368,7 +368,7 @@
 			[self updateLocationOnMap];
 		} else {
 			// running in background
-			if (!self.pebbleWatch || !self.pebbleWatchStateNormal)
+			if (!self.pebbleWatch || !self.pebbleWatchIsReady)
 				[self updateLocationInBackground];
 		}
 	}
@@ -503,7 +503,6 @@
         }];
 
         self.pebbleWatchButtonItem.enabled = YES;
-		self.pebbleWatchStateNormal = YES;
     } else {
         self.pebbleWatchButtonItem.enabled = NO;
     }
@@ -531,7 +530,15 @@
     NSLog(@"Last connected watch: %@", self.pebbleWatch);
 
     if (self.pebbleWatch) {
-        [self pebbleLaunchApp];
+		[self.pebbleWatch appMessagesPushUpdate:@{@(APPMESSAGE_KEY_READY): @(1)}
+										 onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+			if (!error) {
+				self.pebbleWatchIsReady = YES;
+			} else {
+				// appmessage could not be sent, lets start the watch app now
+				[self pebbleLaunchApp];
+			}
+		}];
     }
 }
 
@@ -593,7 +600,6 @@
         else {
             NSLog(@"Error sending message: %@", error);
         }
-		self.pebbleWatchStateNormal = !error;
     }];
 	
 }
@@ -620,7 +626,6 @@
         }
         else {
             NSLog(@"Error sending message: %@", error);
-			self.pebbleWatchStateNormal = !error;
         }
     }];
 }

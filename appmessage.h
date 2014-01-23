@@ -18,6 +18,7 @@ enum {
     APPMESSAGE_KEY_UPDATE_DISTANCE, // remaining distance in current step
     APPMESSAGE_KEY_UPDATE_TOTAL_DISTANCE, // remaining total distance to destination
     APPMESSAGE_KEY_UPDATE_ALERT, // alert the user
+	APPMESSAGE_KEY_READY, // tell the watch that we are ready
 };
 
 // AppMessage action keys
