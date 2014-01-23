@@ -51,7 +51,7 @@
 @property (nonatomic, strong) PBWatch *pebbleWatch;
 @property (nonatomic) BOOL pebbleWatchStateNormal;
 @property (nonatomic, strong) UIBarButtonItem *pebbleWatchButtonItem;
-
+@property (nonatomic) BOOL pebbleWatchIsReady;
 @end
 
 @implementation MapViewController
@@ -155,14 +155,14 @@
         // else init the connected pebble watch now and start the companion app
         // the companion app will get the route later when it is ready
         } else {
-            [self initPebbleWatch];
+            [self pebbleStartSession];
         }
         
 	} else {
 		[self.locationManager stopUpdatingLocation];
 		self.locationManager = nil;
 		[self updateLocationOnMap];
-        [self pebbleKillApp];
+        [self pebbleCloseSession];
 	}
 }
 
@@ -493,6 +493,7 @@
             } else if ([update objectForKey:@(APPMESSAGE_REQUEST_GET_ROUTE)]) {
                 [self pebbleSendRouteStep:0];
             }
+            self.pebbleWatchIsReady = YES;
             return YES;
         }];
 
@@ -508,8 +509,17 @@
     }
 }
 
+- (void)pebbleCloseSession
+{
+    self.pebbleWatchIsReady = NO;
+    [self.pebbleWatch appMessagesKill:^(PBWatch *watch, NSError *error) {
+        [self.pebbleWatch closeSession:^{
+            self.pebbleWatch = nil;
+        }];
+    }];
+}
 
-- (void)initPebbleWatch
+- (void)pebbleStartSession
 {
     uuid_t myAppUUIDbytes;
     NSUUID *myAppUUID = [[NSUUID alloc] initWithUUIDString:PEBBLE_APP_UUID];
@@ -523,11 +533,6 @@
     if (self.pebbleWatch) {
         [self pebbleLaunchApp];
     }
-}
-
-- (void)pebbleKillApp
-{
-    [self.pebbleWatch appMessagesKill:NULL]; // we dont care about the results here
 }
 
 -(void)pebbleLaunchApp
@@ -561,6 +566,8 @@
 - (void)pebbleUpdateLocation {
     BOOL alert = NO;
 
+    if (!self.pebbleWatchIsReady) return; // it the connected watch is not ready, break
+    
     // do we need to alert the user?
     static __weak MKRouteStep *routeStepAlreadyNotified = nil;
     if (self.pebbleRoute.currentStep != routeStepAlreadyNotified &&
