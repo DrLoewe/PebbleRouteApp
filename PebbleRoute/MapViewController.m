@@ -576,14 +576,14 @@
 }
 
 - (void)pebbleUpdateLocation {
-    BOOL alert = NO;
 
     if (!self.pebbleWatchIsReady) return; // it the connected watch is not ready, break
     
     // do we need to alert the user?
+    BOOL alert = NO;
     static __weak MKRouteStep *routeStepAlreadyNotified = nil;
     if (self.pebbleRoute.currentStep != routeStepAlreadyNotified &&
-        self.pebbleRoute.currentStep.distance < MIN_DISTANCE_IN_CURRENT_STEP_TO_ALERT_USER) {
+        self.pebbleRoute.remainingDistanceInCurrentStep < MIN_DISTANCE_IN_CURRENT_STEP_TO_ALERT_USER) {
 		routeStepAlreadyNotified = self.pebbleRoute.currentStep;
         alert = YES;
     }
