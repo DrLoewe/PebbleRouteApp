@@ -52,7 +52,7 @@
 		D813C2241885D17500034D49 /* DirectionsViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DirectionsViewControllerDelegate.h; sourceTree = "<group>"; };
 		D8189AF4188A8C8100DFAB0C /* DateTimeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTimeFormatter.h; sourceTree = "<group>"; };
 		D8189AF5188A8C8100DFAB0C /* DateTimeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateTimeFormatter.m; sourceTree = "<group>"; };
-		D81AEF46188E84830000CB78 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleKit.framework; path = "../../pebble-dev/PebbleSDK-2.0-BETA6/PebbleKit-iOS/PebbleKit.framework"; sourceTree = "<group>"; };
+		D81AEF46188E84830000CB78 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleKit.framework; path = "../../pebble-dev/PebbleSDK-2.0-BETA7/PebbleKit-iOS/PebbleKit.framework"; sourceTree = "<group>"; };
 		D81AEF48188E84FF0000CB78 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		D81AEF4A188E850D0000CB78 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D81AEF4C188E85180000CB78 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
@@ -87,7 +87,7 @@
 		D83D034418857BA600EDC2BE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D83D03461885802800EDC2BE /* DirectionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionsViewController.h; sourceTree = "<group>"; };
 		D83D03471885802800EDC2BE /* DirectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionsViewController.m; sourceTree = "<group>"; };
-		D84EF8D0188E8F39003F8A77 /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleVendor.framework; path = "../../pebble-dev/PebbleSDK-2.0-BETA6/PebbleKit-iOS/PebbleVendor.framework"; sourceTree = "<group>"; };
+		D84EF8D0188E8F39003F8A77 /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleVendor.framework; path = "../../pebble-dev/PebbleSDK-2.0-BETA7/PebbleKit-iOS/PebbleVendor.framework"; sourceTree = "<group>"; };
 		D84EF8D2188EAC94003F8A77 /* Pebble Watch Bar Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Pebble Watch Bar Icon.png"; path = "Artwork/Pebble Watch Bar Icon.png"; sourceTree = SOURCE_ROOT; };
 		D84EF8D4188FFC53003F8A77 /* appmessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = appmessage.h; path = ../appmessage.h; sourceTree = "<group>"; };
 		D8FDD9D11887E577005410BD /* PebbleRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PebbleRoute.h; sourceTree = SOURCE_ROOT; };
