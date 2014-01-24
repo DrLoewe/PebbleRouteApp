@@ -587,26 +587,34 @@
 		routeStepAlreadyNotified = self.pebbleRoute.currentStep;
         alert = YES;
     }
-    
-	NSUInteger index = [self.route.steps indexOfObject:self.pebbleRoute.currentStep];
-    NSDictionary *appMessage = @{
-                                 @(APPMESSAGE_KEY_UPDATE_INDEX): [NSNumber numberWithInt8:index],
-                                 @(APPMESSAGE_KEY_UPDATE_DISTANCE): [self.distanceFormatter stringFromDistance:self.pebbleRoute.remainingDistanceInCurrentStep],
-                                 @(APPMESSAGE_KEY_UPDATE_TOTAL_DISTANCE): [NSString stringWithFormat:@"Remaining: %@",
-                                     [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance]],
-                                 @(APPMESSAGE_KEY_UPDATE_ALERT): [NSNumber numberWithInt8:alert ? 1 : 0]
-                                 };
-    
-    [self.pebbleWatch appMessagesPushUpdate:appMessage onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
-        if (!error) {
-//			NSLog(@"Successfully sent message %@", appMessage);
-			
-        }
-        else {
-            NSLog(@"Error sending message: %@", error);
-        }
-    }];
-	
+    static NSString *oldDistanceString = @"";
+    static NSUInteger oldIndex = 0;
+    NSUInteger index = [self.route.steps indexOfObject:self.pebbleRoute.currentStep];
+    NSString *distanceString = [self.distanceFormatter stringFromDistance:self.pebbleRoute.remainingDistanceInCurrentStep];
+
+    // send updates to pebble only if:
+    // (index has changed) OR (distanceString has changed)
+    if (oldIndex != index || ![distanceString isEqualToString:oldDistanceString]) {
+        oldDistanceString = [distanceString copy];
+        oldIndex = index;
+        NSDictionary *appMessage = @{
+                                     @(APPMESSAGE_KEY_UPDATE_INDEX): [NSNumber numberWithInt8:index],
+                                     @(APPMESSAGE_KEY_UPDATE_DISTANCE): distanceString,
+                                     @(APPMESSAGE_KEY_UPDATE_TOTAL_DISTANCE): [NSString stringWithFormat:@"Remaining: %@",
+                                                                               [self.distanceFormatter stringFromDistance:self.pebbleRoute.distance]],
+                                     @(APPMESSAGE_KEY_UPDATE_ALERT): [NSNumber numberWithInt8:alert ? 1 : 0]
+                                     };
+        
+        [self.pebbleWatch appMessagesPushUpdate:appMessage onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+            if (!error) {
+                //			NSLog(@"Successfully sent message %@", appMessage);
+                
+            }
+            else {
+                NSLog(@"Error sending message: %@", error);
+            }
+        }];
+    }
 }
 
 - (void)pebbleSendRouteStep:(NSUInteger)routeStepIndex
