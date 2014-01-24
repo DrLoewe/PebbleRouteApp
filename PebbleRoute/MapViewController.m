@@ -482,6 +482,12 @@
 
 #pragma mark - Pebble Watch, AppMessage and Delegate Methods
 
+- (void)setPebbleWatchIsReady:(BOOL)pebbleWatchIsReady
+{
+    _pebbleWatchIsReady = pebbleWatchIsReady;
+    self.pebbleWatchButtonItem.enabled = pebbleWatchIsReady;
+}
+
 - (void)setPebbleWatch:(PBWatch *)pebbleWatch
 {
     _pebbleWatch = pebbleWatch;
@@ -501,10 +507,6 @@
         [pebbleWatch appMessagesAddAppLifecycleUpdateHandler:^(PBWatch *watch, NSUUID *uuid, PBAppState newAppState) {
             NSLog(@"appMessage new appState=%d", newAppState);
         }];
-
-        self.pebbleWatchButtonItem.enabled = YES;
-    } else {
-        self.pebbleWatchButtonItem.enabled = NO;
     }
 }
 
