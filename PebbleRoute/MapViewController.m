@@ -490,9 +490,9 @@
 
 - (void)setPebbleWatch:(PBWatch *)pebbleWatch
 {
-    _pebbleWatch = pebbleWatch;
+    static id pebbleReceiveUpdateHandler;
     if (pebbleWatch) {
-        [pebbleWatch appMessagesAddReceiveUpdateHandler:^BOOL(PBWatch *watch, NSDictionary *update) {
+        pebbleReceiveUpdateHandler = [pebbleWatch appMessagesAddReceiveUpdateHandler:^BOOL(PBWatch *watch, NSDictionary *update) {
 //            NSLog(@"Received message: %@", update);
             if ([update objectForKey:@(APPMESSAGE_REQUEST_REROUTE)]) {
                 [self calculateRoute];
@@ -507,7 +507,10 @@
         [pebbleWatch appMessagesAddAppLifecycleUpdateHandler:^(PBWatch *watch, NSUUID *uuid, PBAppState newAppState) {
             NSLog(@"appMessage new appState=%d", newAppState);
         }];
+    } else {
+        [_pebbleWatch appMessagesRemoveUpdateHandler:pebbleReceiveUpdateHandler];
     }
+    _pebbleWatch = pebbleWatch;
 }
 
 - (void)pebbleCloseSession
