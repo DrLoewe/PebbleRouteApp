@@ -18,9 +18,11 @@
 // rl_route app uuid here
 #define PEBBLE_APP_UUID @"cf59151f-4dff-4221-a109-7dde3377545c"
 
-// treshold for location change delta to update UI stuff in m
-#define SIGNIFICANT_DISTANCE_FOR_UPDATE_UI 10
-#define MIN_DISTANCE_IN_CURRENT_STEP_TO_ALERT_USER 10
+// The minimum distance (measured in meters) a device must move horizontally before an update event is generated
+#define CL_DISTANCE_FILTER 10
+
+// when to alert the user that a new turn-by-turn event is available
+#define MIN_DISTANCE_IN_CURRENT_STEP_TO_ALERT_USER 20
 
 @interface MapViewController () <MKMapViewDelegate, DirectionsViewControllerDelegate, UIGestureRecognizerDelegate,
 									CLLocationManagerDelegate, UIActionSheetDelegate, PBPebbleCentralDelegate, PBWatchDelegate>
@@ -89,6 +91,8 @@
 		 */
 
 		_locationManager.activityType = CLActivityTypeFitness;
+		_locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+		_locationManager.distanceFilter = CL_DISTANCE_FILTER;
 	}
 	return _locationManager;
 }
@@ -272,7 +276,7 @@
 - (void)updateLocationInBackground
 {
 	static __weak MKRouteStep *routeStepIsAlreadyNotified = nil;
-	if (self.pebbleRoute.currentStep.distance >= MIN_DISTANCE_IN_CURRENT_STEP_TO_ALERT_USER &&
+	if (self.pebbleRoute.remainingDistanceInCurrentStep < MIN_DISTANCE_IN_CURRENT_STEP_TO_ALERT_USER &&
 		self.pebbleRoute.currentStep != routeStepIsAlreadyNotified) {
 		routeStepIsAlreadyNotified = self.pebbleRoute.currentStep;
 		UILocalNotification *notification = [[UILocalNotification alloc] init];
@@ -346,31 +350,24 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
 	CLLocation *currentLocation = [locations lastObject];
-	//	NSLog(@"CLLocationManager: current location %@", currentLocation);
+	// NSLog(@"CLLocationManager: current location %@", currentLocation);
 	[self processUpdatedUserLocation:currentLocation];
 }
 
 - (void)processUpdatedUserLocation:(CLLocation *)location
 {
-	// perform further updates only if the user location has changed significantly
-	static CLLocation *lastLocation = nil;
-	if (!lastLocation || [location distanceFromLocation:lastLocation] > SIGNIFICANT_DISTANCE_FOR_UPDATE_UI) {
-		lastLocation = location;
-		//		NSLog(@"location updated");
-		// update the current user location in our model
-		self.pebbleRoute.currentUserLocation = location;
-
-		if (self.pebbleWatch) {
-			[self pebbleUpdateLocation];
-		}
-
-		if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-			[self updateLocationOnMap];
-		} else {
-			// running in background
-			if (!self.pebbleWatch || !self.pebbleWatchIsReady)
-				[self updateLocationInBackground];
-		}
+	self.pebbleRoute.currentUserLocation = location;
+	
+	if (self.pebbleWatch) {
+		[self pebbleUpdateLocation];
+	}
+	
+	if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+		[self updateLocationOnMap];
+	} else {
+		// running in background
+		if (!self.pebbleWatch || !self.pebbleWatchIsReady)
+			[self updateLocationInBackground];
 	}
 }
 
