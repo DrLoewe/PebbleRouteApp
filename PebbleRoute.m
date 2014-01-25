@@ -90,6 +90,14 @@
 	if (self.currentStep.polyline.pointCount < 2) {
 		self.remainingDistanceInCurrentStep = 0;
 	} else {
+
+//		MKMapPoint nearestPoint = self.currentStep.polyline.points[pointIndex];
+//		CLLocationCoordinate2D nearestPointCoords = MKCoordinateForMapPoint(nearestPoint);
+//		float distanceToNearestPointOnTrack =
+//			[self.currentUserLocation
+//			 distanceFromLocation:[[CLLocation alloc] initWithLatitude:nearestPointCoords.latitude
+//															 longitude:nearestPointCoords.longitude]];;
+
 		float totalDistance = 0;
 		float distanceFromPointToEnd = 0;
 		for (NSUInteger i=0; i<self.currentStep.polyline.pointCount-1; i++) {
