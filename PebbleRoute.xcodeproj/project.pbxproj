@@ -34,6 +34,7 @@
 		D83D03481885802800EDC2BE /* DirectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D03471885802800EDC2BE /* DirectionsViewController.m */; };
 		D84EF8D1188E8F39003F8A77 /* PebbleVendor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84EF8D0188E8F39003F8A77 /* PebbleVendor.framework */; };
 		D84EF8D3188EAC94003F8A77 /* Pebble Watch Bar Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D84EF8D2188EAC94003F8A77 /* Pebble Watch Bar Icon.png */; };
+		D866E9CB189862C20036F314 /* DestinationDetailViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D866E9CD189862C20036F314 /* DestinationDetailViewController.strings */; };
 		D8FDD9D31887E577005410BD /* PebbleRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FDD9D21887E577005410BD /* PebbleRoute.m */; };
 		D8FDD9D718888394005410BD /* DestinationDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FDD9D618888394005410BD /* DestinationDetailViewController.m */; };
 /* End PBXBuildFile section */
@@ -76,13 +77,11 @@
 		D83D032A1885782000EDC2BE /* PebbleRouteTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PebbleRouteTests-Info.plist"; sourceTree = "<group>"; };
 		D83D032C1885782000EDC2BE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D83D032E1885782000EDC2BE /* PebbleRouteTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PebbleRouteTests.m; sourceTree = "<group>"; };
-		D83D03391885786800EDC2BE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		D83D033A188579C300EDC2BE /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		D83D033B188579C300EDC2BE /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		D83D033D18857A1500EDC2BE /* FindDestinationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindDestinationTableViewController.h; sourceTree = "<group>"; };
 		D83D033E18857A1500EDC2BE /* FindDestinationTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindDestinationTableViewController.m; sourceTree = "<group>"; };
 		D83D034018857B9600EDC2BE /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		D83D034218857BA600EDC2BE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		D83D034318857BA600EDC2BE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D83D034418857BA600EDC2BE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D83D03461885802800EDC2BE /* DirectionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionsViewController.h; sourceTree = "<group>"; };
@@ -90,6 +89,9 @@
 		D84EF8D0188E8F39003F8A77 /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleVendor.framework; path = "../../pebble-dev/PebbleSDK-2.0-BETA7/PebbleKit-iOS/PebbleVendor.framework"; sourceTree = "<group>"; };
 		D84EF8D2188EAC94003F8A77 /* Pebble Watch Bar Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Pebble Watch Bar Icon.png"; path = "Artwork/Pebble Watch Bar Icon.png"; sourceTree = SOURCE_ROOT; };
 		D84EF8D4188FFC53003F8A77 /* appmessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = appmessage.h; path = ../appmessage.h; sourceTree = "<group>"; };
+		D866E9CC189862C20036F314 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = Base; path = Base.lproj/DestinationDetailViewController.strings; sourceTree = "<group>"; };
+		D866E9CE189862F10036F314 /* de */ = {isa = PBXFileReference; lastKnownFileType = file; name = de; path = de.lproj/DestinationDetailViewController.strings; sourceTree = "<group>"; };
+		D866E9D0189864DE0036F314 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		D8FDD9D11887E577005410BD /* PebbleRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PebbleRoute.h; sourceTree = SOURCE_ROOT; };
 		D8FDD9D21887E577005410BD /* PebbleRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PebbleRoute.m; sourceTree = SOURCE_ROOT; };
 		D8FDD9D518888394005410BD /* DestinationDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DestinationDetailViewController.h; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 		D83D03091885782000EDC2BE /* PebbleRoute */ = {
 			isa = PBXGroup;
 			children = (
+				D866E9CD189862C20036F314 /* DestinationDetailViewController.strings */,
 				D84EF8D4188FFC53003F8A77 /* appmessage.h */,
 				D83D03151885782000EDC2BE /* Main.storyboard */,
 				D813C2241885D17500034D49 /* DirectionsViewControllerDelegate.h */,
@@ -329,6 +332,7 @@
 				D83D030E1885782000EDC2BE /* InfoPlist.strings in Resources */,
 				D83D03171885782000EDC2BE /* Main.storyboard in Resources */,
 				D84EF8D3188EAC94003F8A77 /* Pebble Watch Bar Icon.png in Resources */,
+				D866E9CB189862C20036F314 /* DestinationDetailViewController.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,8 +394,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				D83D03161885782000EDC2BE /* Base */,
-				D83D03391885786800EDC2BE /* en */,
-				D83D034218857BA600EDC2BE /* de */,
+				D866E9D0189864DE0036F314 /* de */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -403,6 +406,15 @@
 				D83D034418857BA600EDC2BE /* de */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D866E9CD189862C20036F314 /* DestinationDetailViewController.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D866E9CC189862C20036F314 /* Base */,
+				D866E9CE189862F10036F314 /* de */,
+			);
+			name = DestinationDetailViewController.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

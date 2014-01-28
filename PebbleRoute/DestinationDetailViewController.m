@@ -82,17 +82,25 @@
 	
 }
 
+#define ALERT_PHONE_CALL_TITLE NSLocalizedStringFromTable(@"ALERT_PHONE_CALL_TITLE", @"DestinationDetailViewController", @"Title of the AlertView to confirm a phone call")
+
+#define ALERT_CANCEL_BUTTON_TITLE NSLocalizedStringFromTable(@"ALERT_CANCEL_BUTTON_TITLE", @"DestinationDetailViewController", @"Cancel button text")
+
+#define ALERT_CALL_BUTTON_TITLE NSLocalizedStringFromTable(@"ALERT_CALL_BUTTON_TITLE", @"DestinationDetailViewController", @"Title of the Button to actually perform the phone call")
+
+#define ALERT_CALL_MESSAGE_TEXT NSLocalizedStringFromTable(@"ALERT_CALL_MESSAGE_TEXT", @"DestinationDetailViewController", @"The Message on the above AlertView as a formatted string, the phone number has to be included in the message using %@")
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	switch (indexPath.row) {
 		case 1:
 			// place phone call
 			if (self.mapItem.phoneNumber) {
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Phone Call"
-																message:[NSString stringWithFormat:@"Call %@?", self.mapItem.phoneNumber]
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ALERT_PHONE_CALL_TITLE
+																message:[NSString stringWithFormat:ALERT_CALL_MESSAGE_TEXT, self.mapItem.phoneNumber]
 															   delegate:self
-													  cancelButtonTitle:@"Cancel"
-													  otherButtonTitles:@"Call",nil];
+													  cancelButtonTitle:ALERT_CANCEL_BUTTON_TITLE
+													  otherButtonTitles:ALERT_CALL_BUTTON_TITLE, nil];
 				[alert show];
 			}
 			break;
