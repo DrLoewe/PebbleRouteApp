@@ -1,30 +1,14 @@
-
-/* Class = "IBUILabel"; text = "Title"; ObjectID = "8eu-C5-gfa"; */
-"8eu-C5-gfa.text" = "Titel";
-
 /* Class = "IBUITableViewSection"; headerTitle = "Contact Info"; ObjectID = "FYt-aV-Xbp"; */
 "FYt-aV-Xbp.headerTitle" = "Kontakt Infos";
 
 /* Class = "IBUILabel"; text = "Phone"; ObjectID = "IuR-Pc-krU"; */
 "IuR-Pc-krU.text" = "Telefon";
 
-/* Class = "IBUILabel"; text = "-"; ObjectID = "Qe4-TB-VZL"; */
-"Qe4-TB-VZL.text" = "-";
-
 /* Class = "IBUISearchBar"; placeholder = "Local search, e.g. Pizza"; ObjectID = "UgI-xV-4k6"; */
 "UgI-xV-4k6.placeholder" = "Lokale Suche, z.B. Pizza";
 
 /* Class = "IBUILabel"; text = "URL"; ObjectID = "kRU-3g-oSU"; */
 "kRU-3g-oSU.text" = "URL";
-
-/* Class = "IBUILabel"; text = "Subtitle"; ObjectID = "mAV-xN-yGX"; */
-"mAV-xN-yGX.text" = "Untertitel";
-
-/* Class = "IBUILabel"; text = "-"; ObjectID = "p6v-BJ-pc0"; */
-"p6v-BJ-pc0.text" = "-";
-
-/* Class = "IBUILabel"; text = "-"; ObjectID = "qsX-dI-1F8"; */
-"qsX-dI-1F8.text" = "-";
 
 /* Class = "IBUINavigationItem"; title = "Map"; ObjectID = "rHP-VB-bcF"; */
 "rHP-VB-bcF.title" = "Karte";

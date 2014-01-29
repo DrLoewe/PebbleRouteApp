@@ -15,6 +15,7 @@
 @property (strong, nonatomic) MKLocalSearchResponse *searchResponse;
 @property (nonatomic) BOOL firstCall;
 @property (nonatomic, strong) MKDistanceFormatter *distanceFormatter;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @end
 
 static NSInteger lastSelectedRow = -1;
@@ -53,6 +54,13 @@ static NSInteger lastSelectedRow = -1;
 	
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	
+	// workarround for a bug in the current sdk, so that the UISearchBar.placeholder strings arent getting
+	// localized
+	self.searchBar.placeholder = NSLocalizedStringWithDefaultValue(@"UgI-xV-4k6.placeholder",
+																   @"Main",
+																   [NSBundle mainBundle],
+																   self.searchBar.placeholder, nil);
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -197,7 +205,7 @@ static NSInteger lastSelectedRow = -1;
 		item = self.searchResponse.mapItems[indexPath.row];
 	}
 	MKPlacemark *mark = item.placemark;
-	NSString *street = mark.addressDictionary[@"Street"];
+	NSString *street = mark.addressDictionary[(NSString *)kABPersonAddressStreetKey];
 	cell.textLabel.text = item.name;
 	CLLocation *origin = [[CLLocation alloc] initWithLatitude:self.region.center.latitude
 													longitude:self.region.center.longitude];

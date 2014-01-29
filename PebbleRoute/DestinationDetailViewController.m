@@ -7,6 +7,7 @@
 //
 
 #import "DestinationDetailViewController.h"
+#import <AddressBook/AddressBook.h>
 #import <MapKit/MapKit.h>
 
 @interface DestinationDetailViewController () <UIAlertViewDelegate>
@@ -23,7 +24,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
 	self.title = self.mapItem.placemark.name;
-	self.addressLabel.text = self.mapItem.placemark.addressDictionary[@"Street"];
+	self.addressLabel.text = self.mapItem.placemark.addressDictionary[(NSString *)kABPersonAddressStreetKey];
 	self.phoneLabel.text = self.mapItem.phoneNumber;
 
 	if (self.mapItem.url) {

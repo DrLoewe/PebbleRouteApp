@@ -150,6 +150,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="searchBar" destination="UgI-xV-4k6" id="auE-Ov-oq6"/>
                         <outlet property="searchDisplayController" destination="Zwg-aw-8Fk" id="Mzy-BY-4G2"/>
                     </connections>
                 </tableViewController>
