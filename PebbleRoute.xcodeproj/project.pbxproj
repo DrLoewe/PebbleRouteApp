@@ -500,7 +500,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/lazarrs/pebble-dev/PebbleSDK-2.0-BETA6/PebbleKit-iOS",
 					"/Users/lazarrs/pebble-dev/PebbleSDK-2.1.1/PebbleKit-iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -522,7 +521,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/lazarrs/pebble-dev/PebbleSDK-2.0-BETA6/PebbleKit-iOS",
 					"/Users/lazarrs/pebble-dev/PebbleSDK-2.1.1/PebbleKit-iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
