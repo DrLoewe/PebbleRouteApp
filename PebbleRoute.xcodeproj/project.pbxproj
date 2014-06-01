@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		D8189AF6188A8C8100DFAB0C /* DateTimeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = D8189AF5188A8C8100DFAB0C /* DateTimeFormatter.m */; };
-		D81AEF47188E84830000CB78 /* PebbleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81AEF46188E84830000CB78 /* PebbleKit.framework */; };
 		D81AEF49188E84FF0000CB78 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81AEF48188E84FF0000CB78 /* ExternalAccessory.framework */; };
 		D81AEF4B188E850D0000CB78 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D81AEF4A188E850D0000CB78 /* libz.dylib */; };
 		D81AEF4D188E85180000CB78 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81AEF4C188E85180000CB78 /* CoreBluetooth.framework */; };
@@ -32,9 +31,10 @@
 		D83D033F18857A1500EDC2BE /* FindDestinationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D033E18857A1500EDC2BE /* FindDestinationTableViewController.m */; };
 		D83D034118857B9600EDC2BE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83D034018857B9600EDC2BE /* MapKit.framework */; };
 		D83D03481885802800EDC2BE /* DirectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D03471885802800EDC2BE /* DirectionsViewController.m */; };
-		D84EF8D1188E8F39003F8A77 /* PebbleVendor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84EF8D0188E8F39003F8A77 /* PebbleVendor.framework */; };
 		D84EF8D3188EAC94003F8A77 /* Pebble Watch Bar Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D84EF8D2188EAC94003F8A77 /* Pebble Watch Bar Icon.png */; };
 		D866E9CB189862C20036F314 /* DestinationDetailViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D866E9CD189862C20036F314 /* DestinationDetailViewController.strings */; };
+		D8F878A4193B1AD6005BE976 /* PebbleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8F878A2193B1AD6005BE976 /* PebbleKit.framework */; };
+		D8F878A5193B1AD6005BE976 /* PebbleVendor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8F878A3193B1AD6005BE976 /* PebbleVendor.framework */; };
 		D8FDD9D31887E577005410BD /* PebbleRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FDD9D21887E577005410BD /* PebbleRoute.m */; };
 		D8FDD9D718888394005410BD /* DestinationDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FDD9D618888394005410BD /* DestinationDetailViewController.m */; };
 /* End PBXBuildFile section */
@@ -53,7 +53,6 @@
 		D813C2241885D17500034D49 /* DirectionsViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DirectionsViewControllerDelegate.h; sourceTree = "<group>"; };
 		D8189AF4188A8C8100DFAB0C /* DateTimeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTimeFormatter.h; sourceTree = "<group>"; };
 		D8189AF5188A8C8100DFAB0C /* DateTimeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateTimeFormatter.m; sourceTree = "<group>"; };
-		D81AEF46188E84830000CB78 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleKit.framework; path = "../../pebble-dev/PebbleSDK-2.0-BETA7/PebbleKit-iOS/PebbleKit.framework"; sourceTree = "<group>"; };
 		D81AEF48188E84FF0000CB78 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		D81AEF4A188E850D0000CB78 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D81AEF4C188E85180000CB78 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
@@ -86,12 +85,13 @@
 		D83D034418857BA600EDC2BE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D83D03461885802800EDC2BE /* DirectionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionsViewController.h; sourceTree = "<group>"; };
 		D83D03471885802800EDC2BE /* DirectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionsViewController.m; sourceTree = "<group>"; };
-		D84EF8D0188E8F39003F8A77 /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleVendor.framework; path = "../../pebble-dev/PebbleSDK-2.0-BETA7/PebbleKit-iOS/PebbleVendor.framework"; sourceTree = "<group>"; };
 		D84EF8D2188EAC94003F8A77 /* Pebble Watch Bar Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Pebble Watch Bar Icon.png"; path = "Artwork/Pebble Watch Bar Icon.png"; sourceTree = SOURCE_ROOT; };
 		D84EF8D4188FFC53003F8A77 /* appmessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = appmessage.h; path = ../appmessage.h; sourceTree = "<group>"; };
-		D866E9CC189862C20036F314 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = Base; path = Base.lproj/DestinationDetailViewController.strings; sourceTree = "<group>"; };
-		D866E9CE189862F10036F314 /* de */ = {isa = PBXFileReference; lastKnownFileType = file; name = de; path = de.lproj/DestinationDetailViewController.strings; sourceTree = "<group>"; };
+		D866E9CC189862C20036F314 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/DestinationDetailViewController.strings; sourceTree = "<group>"; };
+		D866E9CE189862F10036F314 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/DestinationDetailViewController.strings; sourceTree = "<group>"; };
 		D866E9D0189864DE0036F314 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
+		D8F878A2193B1AD6005BE976 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleKit.framework; path = "../../pebble-dev/PebbleSDK-2.1.1/PebbleKit-iOS/PebbleKit.framework"; sourceTree = "<group>"; };
+		D8F878A3193B1AD6005BE976 /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleVendor.framework; path = "../../pebble-dev/PebbleSDK-2.1.1/PebbleKit-iOS/PebbleVendor.framework"; sourceTree = "<group>"; };
 		D8FDD9D11887E577005410BD /* PebbleRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PebbleRoute.h; sourceTree = SOURCE_ROOT; };
 		D8FDD9D21887E577005410BD /* PebbleRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PebbleRoute.m; sourceTree = SOURCE_ROOT; };
 		D8FDD9D518888394005410BD /* DestinationDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DestinationDetailViewController.h; sourceTree = "<group>"; };
@@ -109,12 +109,12 @@
 				D81AEF4D188E85180000CB78 /* CoreBluetooth.framework in Frameworks */,
 				D81AEF4B188E850D0000CB78 /* libz.dylib in Frameworks */,
 				D81AEF49188E84FF0000CB78 /* ExternalAccessory.framework in Frameworks */,
-				D84EF8D1188E8F39003F8A77 /* PebbleVendor.framework in Frameworks */,
+				D8F878A5193B1AD6005BE976 /* PebbleVendor.framework in Frameworks */,
 				D83D034118857B9600EDC2BE /* MapKit.framework in Frameworks */,
 				D83D03061885782000EDC2BE /* CoreGraphics.framework in Frameworks */,
-				D81AEF47188E84830000CB78 /* PebbleKit.framework in Frameworks */,
 				D83D03081885782000EDC2BE /* UIKit.framework in Frameworks */,
 				D83D03041885782000EDC2BE /* Foundation.framework in Frameworks */,
+				D8F878A4193B1AD6005BE976 /* PebbleKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,8 +134,8 @@
 		D83D02F71885782000EDC2BE = {
 			isa = PBXGroup;
 			children = (
-				D84EF8D0188E8F39003F8A77 /* PebbleVendor.framework */,
-				D81AEF46188E84830000CB78 /* PebbleKit.framework */,
+				D8F878A2193B1AD6005BE976 /* PebbleKit.framework */,
+				D8F878A3193B1AD6005BE976 /* PebbleVendor.framework */,
 				D83D03091885782000EDC2BE /* PebbleRoute */,
 				D83D03281885782000EDC2BE /* PebbleRouteTests */,
 				D83D03021885782000EDC2BE /* Frameworks */,
@@ -288,10 +288,11 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = PebbleRoute;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Remus Lazar";
 				TargetAttributes = {
 					D83D02FF1885782000EDC2BE = {
+						DevelopmentTeam = 5MR244XF46;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -424,7 +425,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -463,7 +463,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -497,15 +496,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/lazarrs/pebble-dev/PebbleSDK-2.0-BETA6/PebbleKit-iOS",
+					"/Users/lazarrs/pebble-dev/PebbleSDK-2.1.1/PebbleKit-iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PebbleRoute/PebbleRoute-Prefix.pch";
 				INFOPLIST_FILE = "PebbleRoute/PebbleRoute-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -515,15 +518,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/lazarrs/pebble-dev/PebbleSDK-2.0-BETA6/PebbleKit-iOS",
+					"/Users/lazarrs/pebble-dev/PebbleSDK-2.1.1/PebbleKit-iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PebbleRoute/PebbleRoute-Prefix.pch";
 				INFOPLIST_FILE = "PebbleRoute/PebbleRoute-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -531,7 +538,6 @@
 		D83D03361885782000EDC2BE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PebbleRoute.app/PebbleRoute";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -554,7 +560,6 @@
 		D83D03371885782000EDC2BE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PebbleRoute.app/PebbleRoute";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

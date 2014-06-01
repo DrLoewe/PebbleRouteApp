@@ -12,6 +12,6 @@
 
 // returns a string representation of the given time interval in a
 // human readable way with the appropriate precision
-+ (NSString *)shortStringForTimeInterval:(NSTimeInterval)timeInterval;
+- (NSString *)shortStringForTimeInterval:(NSTimeInterval)timeInterval;
 
 @end

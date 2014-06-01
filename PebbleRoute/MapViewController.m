@@ -53,6 +53,9 @@
 @property (nonatomic, strong) PBWatch *pebbleWatch;
 @property (nonatomic, strong) UIBarButtonItem *pebbleWatchButtonItem;
 @property (nonatomic) BOOL pebbleWatchIsReady;
+
+@property (nonatomic, strong) DateTimeFormatter *dateTimeFormatter;
+
 @end
 
 @implementation MapViewController
@@ -65,6 +68,12 @@
 }
 
 #pragma mark - lazy instantiation of properties
+
+- (DateTimeFormatter *)dateTimeFormatter
+{
+	if (!_dateTimeFormatter) _dateTimeFormatter = [[DateTimeFormatter alloc] init];
+	return _dateTimeFormatter;
+}
 
 - (UIBarButtonItem *)pebbleWatchButtonItem
 {
@@ -225,7 +234,7 @@
 	if (self.route) {
 		self.RouteDistanceLabel.text = [NSString stringWithFormat:@"∑ %@ (%@)",
 										[self.distanceFormatter stringFromDistance:self.route.distance],
-										[DateTimeFormatter shortStringForTimeInterval:self.route.expectedTravelTime]
+										[self.dateTimeFormatter shortStringForTimeInterval:self.route.expectedTravelTime]
 										];
 		self.RouteDistanceLabel.hidden = NO;
 		[self.map addOverlay:self.route.polyline level:MKOverlayLevelAboveRoads];
